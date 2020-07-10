@@ -1,0 +1,60 @@
+@import '~antd/lib/style/themes/default.less';
+
+@nav-header-height: 64px;
+
+
+.sider {
+    min-height: 100vh;
+    box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+    position: relative;
+    z-index: 10;
+
+    &.fixSiderbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        :global(.ant-menu-root) {
+            overflow-y: auto;
+            height:~'calc(100vh - @{nav-header-height})';
+        }
+    }
+
+    .logo {
+        height: 32px;
+        line-height: 32px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        margin: 16px;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+        // background: white;
+        // box-shadow: 1px 1px 0 0 @border-color-split;
+
+        h1 {
+            margin: 0;
+            // color: @primary-color;
+            color: #ffffff;
+
+        }
+    }
+
+    // &.light {
+    //     box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+    //     background-color: white;
+
+    //     .logo {
+    //         background: white;
+    //         box-shadow: 1px 1px 0 0 @border-color-split;
+
+    //         h1 {
+    //             color: @primary-color;
+    //         }
+    //     }
+
+    //     :global(.ant-menu-light) {
+    //         border-right-color: transparent;
+    //     }
+    // }
+}

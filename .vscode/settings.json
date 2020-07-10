@@ -1,0 +1,15 @@
+{
+    "editor.formatOnSave": true,
+    "eslint.validate": [
+        "vue",
+        "html",
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact"
+    ],
+    "files.associations": {
+        "*.js": "javascriptreact"
+    },
+    "eslint.alwaysShowStatus": true
+}
