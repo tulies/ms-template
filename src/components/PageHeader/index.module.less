@@ -2,14 +2,20 @@
 
 .pageHeader {
     background: @component-background;
-    padding: 16px 24px;
+    padding: 16px 18px;
     border-bottom: @border-width-base @border-style-base @border-color-split;
 
-    :global {
-        .ant-breadcrumb {
-            &+.heading {
-                margin-top: 8px;
-            }
+    // :global {
+    //     .ant-breadcrumb {
+    //         &+.heading {
+    //             margin-top: 8px;
+    //         }
+    //     }
+    // }
+
+    .breadcrumb {
+        &+.heading {
+            margin-top: 8px;
         }
     }
 

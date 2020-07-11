@@ -31,7 +31,7 @@ class BasicLayout extends React.Component {
           />
           <Content
             style={{
-              margin: "24px 24px 0",
+              margin: "18px 18px 0",
               minHeight: 280,
             }}
           >

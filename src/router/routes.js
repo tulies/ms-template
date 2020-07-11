@@ -1,18 +1,23 @@
 import {
   ShopOutlined,
   TransactionOutlined,
-  SettingOutlined,
+  // SettingOutlined,
   HomeOutlined,
+  MehOutlined,
 } from "@ant-design/icons";
-import BasicLayout from "../layouts/BasicLayout";
-import BlankLayout from "../layouts/BlankLayout";
-import UserLayout from "../layouts/UserLayout";
+import BasicLayout from "@/layouts/BasicLayout";
+import BlankLayout from "@/layouts/BlankLayout";
+import UserLayout from "@/layouts/UserLayout";
+
 // import Main from "../pages/Main";
-import About from "../pages/About";
-import List from "../pages/List";
+import About from "@/pages/About";
+import List from "@/pages/List";
 // import More from "../pages/More";
-import MoreA from "../pages/More/A";
-import UserLogin from "../pages/user/login";
+import UserLogin from "@/pages/user/login";
+
+// 平台管理 - 平台用户管理
+import PlatUser from "@/pages/Sys/PlatUser";
+
 const routes = [
   {
     path: "/user",
@@ -36,6 +41,24 @@ const routes = [
     // exact: true,
     routes: [
       {
+        name: "平台管理",
+        path: "/sys",
+        component: BlankLayout,
+        icon: MehOutlined,
+        routes: [
+          {
+            name: "平台用户管理",
+            path: "/sys/plat-user",
+            component: PlatUser,
+          },
+          {
+            name: "服务人员管理",
+            path: "/sys/server-user",
+            component: PlatUser,
+          },
+        ],
+      },
+      {
         name: "运营编辑",
         path: "/list",
         component: List,
@@ -44,17 +67,17 @@ const routes = [
           {
             name: "首页推荐",
             path: "/list/a",
-            component: MoreA,
+            component: PlatUser,
           },
           {
             name: "保养知识",
             path: "/list/b",
-            component: MoreA,
+            component: PlatUser,
           },
           {
             name: "活动推荐",
             path: "/list/c",
-            component: MoreA,
+            component: PlatUser,
           },
         ],
       },
@@ -67,7 +90,7 @@ const routes = [
           {
             name: "服务信息",
             path: "/test/a",
-            component: MoreA,
+            component: PlatUser,
           },
         ],
       },
@@ -80,20 +103,7 @@ const routes = [
           {
             name: "订单列表",
             path: "/about/a",
-            component: MoreA,
-          },
-        ],
-      },
-      {
-        name: "设置",
-        path: "/more",
-        component: BlankLayout,
-        icon: SettingOutlined,
-        routes: [
-          {
-            name: "A页面",
-            path: "/more/a",
-            component: MoreA,
+            component: PlatUser,
           },
         ],
       },

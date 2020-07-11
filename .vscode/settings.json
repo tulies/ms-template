@@ -11,5 +11,8 @@
     "files.associations": {
         "*.js": "javascriptreact"
     },
-    "eslint.alwaysShowStatus": true
+    "eslint.alwaysShowStatus": true,
+    "path-intellisense.mappings": {
+        "@": "${workspaceRoot}/src"
+    }
 }

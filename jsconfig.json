@@ -1,7 +1,11 @@
 {
     "compilerOptions": {
         "experimentalDecorators": true,
-        "target": "es2017"
+        "target": "es2017",
+        "baseUrl": "./",
+        "paths": {
+            "@/*": ["src/*"]
+        }
     },
     "exclude": [
         "node_modules",

@@ -63,7 +63,7 @@ export default class BreadcrumbView extends PureComponent {
       linkElement = "a",
     } = this.props;
     return (
-      <Breadcrumb className={styles.breadcrumb} separator={breadcrumbSeparator}>
+      <Breadcrumb separator={breadcrumbSeparator}>
         {breadcrumbList.map((item) => {
           const title = itemRender ? itemRender(item) : item.title;
           return (

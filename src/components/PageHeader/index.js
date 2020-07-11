@@ -7,7 +7,11 @@ const PageHeader = (props) => {
   const { title, content, hiddenBreadcrumb = false } = props;
   return (
     <div className={styles.pageHeader}>
-      {hiddenBreadcrumb ? null : <BreadcrumbView {...props} />}
+      {hiddenBreadcrumb ? null : (
+        <div className={styles.breadcrumb}>
+          <BreadcrumbView {...props} />
+        </div>
+      )}
       {title && (
         <div className={styles.heading}>
           <div className={styles.headingLeft}>
