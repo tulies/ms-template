@@ -12,6 +12,9 @@
         "*.js": "javascriptreact"
     },
     "eslint.alwaysShowStatus": true,
+    "auto-rename-tag.activationOnLanguage": [
+        "*"
+    ],
     "path-intellisense.mappings": {
         "@": "${workspaceRoot}/src"
     }

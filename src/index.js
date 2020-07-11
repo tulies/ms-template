@@ -6,7 +6,8 @@ import store from "./store";
 
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-
+import "./data/mock/api";
+// require("./data/mock/api.js");
 ReactDOM.render(
   // <React.StrictMode></React.StrictMode>
   <Provider store={store}>

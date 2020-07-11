@@ -9,6 +9,7 @@ import {
   Form,
   Pagination,
 } from "antd";
+
 import {
   DownSquareOutlined,
   PlusOutlined,
@@ -18,51 +19,46 @@ import {
   DeleteRowOutlined,
   // MoreOutlined,
 } from "@ant-design/icons";
+import { observer, inject } from "mobx-react";
+
+import { queryUserList } from "@/services/UserService";
 import PageWrapper from "../../../components/PageWrapper";
 import PageHeader from "../../../components/PageHeader";
 import PageContent from "../../../components/PageWrapper/Content";
+
 const { Search } = Input;
 const { Option } = Select;
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "ID",
+    dataIndex: "id",
+
     // eslint-disable-next-line
-    render: (text) => <a>{text}</a>,
+    // render: (text) => <a>{text}</a>,
   },
   {
-    title: "Age",
-    dataIndex: "age",
+    title: "UID",
+    dataIndex: "uid",
   },
   {
-    title: "Address",
-    dataIndex: "address",
-  },
-];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
+    title: "昵称",
+    dataIndex: "nickname",
   },
   {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
+    title: "帐号",
+    dataIndex: "username",
   },
   {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
+    title: "状态",
+    dataIndex: "status",
   },
   {
-    key: "4",
-    name: "Disabled User",
-    age: 99,
-    address: "Sidney No. 1 Lake Park",
+    title: "创建时间",
+    dataIndex: "createTime",
+  },
+  {
+    title: "更新时间",
+    dataIndex: "updateTime",
   },
 ];
 const rowSelection = {
@@ -78,7 +74,9 @@ const rowSelection = {
     name: record.name,
   }),
 };
-class About extends React.PureComponent {
+@inject("store")
+@observer
+class PlatUser extends React.PureComponent {
   state = {
     // detailDialogVisible: false,
     // createDialogVisible: false,
@@ -110,8 +108,24 @@ class About extends React.PureComponent {
       showMoreSearch: true,
     });
   }
+  componentDidMount() {
+    const { store } = this.props;
+    store.PlatUser.queryUserList();
+  }
   render() {
+    console.log("render--------------------------");
+    const { store } = this.props;
+    console.log(store);
+
+    console.log(store);
+    store.PlatUser.userList && console.log(store.PlatUser.userList.list);
     const { showMoreSearch } = this.state;
+    console.log(
+      "queryUserList",
+      queryUserList().then((res) => console.log(res))
+    );
+
+    const data = store.PlatUser.userList ? store.PlatUser.userList.list : [];
     return (
       <PageWrapper>
         <PageHeader {...this.props} title="哈哈哈哈哈哈"></PageHeader>
@@ -172,6 +186,7 @@ class About extends React.PureComponent {
                     // type: selectionType,
                     ...rowSelection,
                   }}
+                  rowKey="id"
                   columns={columns}
                   dataSource={data}
                   pagination={false}
@@ -196,4 +211,4 @@ class About extends React.PureComponent {
     );
   }
 }
-export default About;
+export default PlatUser;
