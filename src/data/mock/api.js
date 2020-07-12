@@ -1,5 +1,5 @@
 import Mock from "mockjs";
-const Random = Mock.Random;
+// const Random = Mock.Random;
 const url = {
   queryUserList: "/user/queryUserList",
 };
@@ -20,7 +20,7 @@ export default [
         username: "@first",
         avatar: "",
         salt: "",
-        status: Random.integer(0, 1),
+        status: "@integer(0, 2)",
         createTime: "@datetime",
         updateTime: "@datetime",
       },

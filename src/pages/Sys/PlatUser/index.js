@@ -8,6 +8,7 @@ import {
   Tooltip,
   Form,
   Pagination,
+  Badge,
 } from "antd";
 
 import {
@@ -28,6 +29,9 @@ import PageContent from "../../../components/PageWrapper/Content";
 
 const { Search } = Input;
 const { Option } = Select;
+const statusMap = ["default", "processing", "error"];
+const status = ["新建", "启用中", "已停用"];
+
 const columns = [
   {
     title: "ID",
@@ -51,6 +55,9 @@ const columns = [
   {
     title: "状态",
     dataIndex: "status",
+    render(val) {
+      return <Badge status={statusMap[val]} text={status[val]} />;
+    },
   },
   {
     title: "创建时间",

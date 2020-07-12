@@ -35,7 +35,7 @@ class BasicLayout extends React.Component {
               minHeight: 280,
             }}
           >
-            {children}
+            {children ? children : "欢迎欢迎👏👏👏👏👏👏👏"}
           </Content>
         </Layout>
       </Layout>

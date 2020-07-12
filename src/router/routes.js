@@ -41,6 +41,12 @@ const routes = [
     // exact: true,
     routes: [
       {
+        name: "",
+        path: "/",
+        component: PlatUser,
+        icon: MehOutlined,
+      },
+      {
         name: "平台管理",
         path: "/sys",
         component: BlankLayout,
