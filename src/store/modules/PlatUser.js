@@ -9,11 +9,12 @@ class PlatUser {
   //   constructor() {}
 
   @action
-  async queryUserList() {
+  async queryUserList({ payload, callback }) {
     const data = await queryUserList();
     runInAction(() => {
       this.userList = data;
     });
+    if (callback) callback(data);
   }
 }
 const platUser = new PlatUser();

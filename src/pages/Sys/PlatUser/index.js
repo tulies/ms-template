@@ -9,6 +9,7 @@ import {
   Form,
   Pagination,
   Badge,
+  message,
 } from "antd";
 
 import {
@@ -22,10 +23,11 @@ import {
 } from "@ant-design/icons";
 import { observer, inject } from "mobx-react";
 
-import { queryUserList } from "@/services/UserService";
 import PageWrapper from "../../../components/PageWrapper";
 import PageHeader from "../../../components/PageHeader";
 import PageContent from "../../../components/PageWrapper/Content";
+// 新增界面
+import AddModal from "./AddModal";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -36,7 +38,6 @@ const columns = [
   {
     title: "ID",
     dataIndex: "id",
-
     // eslint-disable-next-line
     // render: (text) => <a>{text}</a>,
   },
@@ -85,8 +86,8 @@ const rowSelection = {
 @observer
 class PlatUser extends React.PureComponent {
   state = {
+    addModalVisible: false,
     // detailDialogVisible: false,
-    // createDialogVisible: false,
     // multipleSelection: [],
     // currentRow: null,
     // pageNum: 1,
@@ -117,20 +118,23 @@ class PlatUser extends React.PureComponent {
   }
   componentDidMount() {
     const { store } = this.props;
-    store.PlatUser.queryUserList();
+    store.PlatUser.queryUserList({
+      payload: {},
+      callback() {
+        console.log(1212);
+      },
+    });
+  }
+  handleShowAddModal() {
+    this.setState({
+      addModalVisible: true,
+    });
+    console.log(this.props);
   }
   render() {
-    console.log("render--------------------------");
     const { store } = this.props;
-    console.log(store);
-
-    console.log(store);
     store.PlatUser.userList && console.log(store.PlatUser.userList.list);
-    const { showMoreSearch } = this.state;
-    console.log(
-      "queryUserList",
-      queryUserList().then((res) => console.log(res))
-    );
+    const { showMoreSearch, addModalVisible } = this.state;
 
     const data = store.PlatUser.userList ? store.PlatUser.userList.list : [];
     return (
@@ -141,7 +145,13 @@ class PlatUser extends React.PureComponent {
             <div className="tulies-table-constainer">
               <div className="tulies-table-operator">
                 <div className="left-operator">
-                  <Button type="primary" icon={<PlusOutlined />}>
+                  <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() => {
+                      this.handleShowAddModal();
+                    }}
+                  >
                     新增
                   </Button>
                   <Button icon={<SendOutlined />}>发布</Button>
@@ -214,6 +224,23 @@ class PlatUser extends React.PureComponent {
             </div>
           </Card>
         </PageContent>
+        {addModalVisible ? (
+          <AddModal
+            visible={addModalVisible}
+            handleCancel={() => {
+              this.setState({ addModalVisible: false });
+            }}
+            handleOk={() => {
+              const key = "addModalHandleOk";
+              message.loading({ content: "正在处理中...", key });
+              setTimeout(() => {
+                this.setState({ addModalVisible: false });
+
+                message.success({ content: "处理完成！", key, duration: 2 });
+              }, 1000);
+            }}
+          ></AddModal>
+        ) : null}
       </PageWrapper>
     );
   }
