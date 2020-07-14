@@ -120,6 +120,7 @@ export default class SiderMenu extends React.PureComponent {
       >
         <div className={styles.logo}>
           <h1>天翼服务后台系统</h1>
+          {/* <h1>上海钢琴服务后台</h1> */}
         </div>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
           {this.getNavMenuItems(routes[1].routes)}

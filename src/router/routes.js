@@ -40,12 +40,12 @@ const routes = [
     component: BasicLayout,
     // exact: true,
     routes: [
-      {
-        name: "",
-        path: "/",
-        component: PlatUser,
-        icon: MehOutlined,
-      },
+      // {
+      //   name: "",
+      //   path: "/",
+      //   component: PlatUser,
+      //   icon: MehOutlined,
+      // },
       {
         name: "平台管理",
         path: "/sys",
@@ -54,12 +54,12 @@ const routes = [
         routes: [
           {
             name: "平台用户管理",
-            path: "/sys/plat-user",
+            path: "/sys/platUser",
             component: PlatUser,
           },
           {
             name: "服务人员管理",
-            path: "/sys/server-user",
+            path: "/sys/serverUser",
             component: PlatUser,
           },
         ],

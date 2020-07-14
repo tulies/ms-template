@@ -135,7 +135,7 @@ class PlatUser extends React.PureComponent {
     const data = store.PlatUser.userList ? store.PlatUser.userList.list : [];
     return (
       <PageWrapper>
-        <PageHeader {...this.props} title="哈哈哈哈哈哈"></PageHeader>
+        <PageHeader {...this.props} title="平台用户管理"></PageHeader>
         <PageContent {...this.props}>
           <Card bordered={true}>
             <div className="tulies-table-constainer">
