@@ -38,16 +38,14 @@ const columns = [
   {
     title: "ID",
     dataIndex: "id",
-    // eslint-disable-next-line
-    // render: (text) => <a>{text}</a>,
   },
   {
     title: "UID",
     dataIndex: "uid",
   },
   {
-    title: "昵称",
-    dataIndex: "nickname",
+    title: "称呼",
+    dataIndex: "alias",
   },
   {
     title: "帐号",
@@ -84,7 +82,7 @@ const rowSelection = {
 };
 @inject("store")
 @observer
-class PlatUser extends React.PureComponent {
+class User extends React.PureComponent {
   state = {
     addModalVisible: false,
     // detailDialogVisible: false,
@@ -118,7 +116,7 @@ class PlatUser extends React.PureComponent {
   }
   componentDidMount() {
     const { store } = this.props;
-    store.PlatUser.queryUserList({
+    store.User.queryUserList({
       payload: {},
       callback() {
         console.log(1212);
@@ -133,10 +131,10 @@ class PlatUser extends React.PureComponent {
   }
   render() {
     const { store } = this.props;
-    store.PlatUser.userList && console.log(store.PlatUser.userList.list);
+    store.User.userList && console.log(store.User.userList.list);
     const { showMoreSearch, addModalVisible } = this.state;
 
-    const data = store.PlatUser.userList ? store.PlatUser.userList.list : [];
+    const data = store.User.userList ? store.User.userList.list : [];
     return (
       <PageWrapper>
         <PageHeader {...this.props} title="平台用户管理"></PageHeader>
@@ -245,4 +243,4 @@ class PlatUser extends React.PureComponent {
     );
   }
 }
-export default PlatUser;
+export default User;

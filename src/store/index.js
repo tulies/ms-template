@@ -1,9 +1,9 @@
 // 汇总store
 import test from "./modules/test";
-import PlatUser from "./modules/PlatUser";
+import User from "./modules/User";
 
 const store = {
   test,
-  PlatUser,
+  User,
 };
 export default store;

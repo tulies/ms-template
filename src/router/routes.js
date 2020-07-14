@@ -16,7 +16,7 @@ import List from "@/pages/List";
 import UserLogin from "@/pages/user/login";
 
 // 平台管理 - 平台用户管理
-import PlatUser from "@/pages/Sys/PlatUser";
+import SysUser from "@/pages/Sys/User";
 
 const routes = [
   {
@@ -54,13 +54,8 @@ const routes = [
         routes: [
           {
             name: "平台用户管理",
-            path: "/sys/platUser",
-            component: PlatUser,
-          },
-          {
-            name: "服务人员管理",
-            path: "/sys/serverUser",
-            component: PlatUser,
+            path: "/sys/user",
+            component: SysUser,
           },
         ],
       },
@@ -73,17 +68,17 @@ const routes = [
           {
             name: "首页推荐",
             path: "/list/a",
-            component: PlatUser,
+            component: SysUser,
           },
           {
             name: "保养知识",
             path: "/list/b",
-            component: PlatUser,
+            component: SysUser,
           },
           {
             name: "活动推荐",
             path: "/list/c",
-            component: PlatUser,
+            component: SysUser,
           },
         ],
       },
@@ -96,7 +91,7 @@ const routes = [
           {
             name: "服务信息",
             path: "/test/a",
-            component: PlatUser,
+            component: SysUser,
           },
         ],
       },
@@ -109,7 +104,7 @@ const routes = [
           {
             name: "订单列表",
             path: "/about/a",
-            component: PlatUser,
+            component: SysUser,
           },
         ],
       },

@@ -3,7 +3,7 @@ import { queryUserList } from "@/services/UserService";
 // 不允许在动作外部修改状态
 configure({ enforceActions: "always" });
 
-class PlatUser {
+class User {
   @observable userList;
 
   //   constructor() {}
@@ -17,5 +17,5 @@ class PlatUser {
     if (callback) callback(data);
   }
 }
-const platUser = new PlatUser();
-export default platUser;
+const user = new User();
+export default user;
