@@ -2,6 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./assets/css/index.less";
 import { Provider } from "mobx-react";
+import { ConfigProvider } from "antd";
+import zhCN from "antd/es/locale/zh_CN";
 import store from "./store";
 
 import App from "./App";
@@ -10,8 +12,11 @@ import "./data/mock/api";
 // require("./data/mock/api.js");
 ReactDOM.render(
   // <React.StrictMode></React.StrictMode>
+
   <Provider store={store}>
-    <App />
+    <ConfigProvider locale={zhCN}>
+      <App />
+    </ConfigProvider>
   </Provider>,
   document.getElementById("root")
 );
