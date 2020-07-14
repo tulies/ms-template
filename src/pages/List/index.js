@@ -1,6 +1,13 @@
 import React from "react";
-
-class About extends React.PureComponent {
+class Test extends React.PureComponent {
+  state = {
+    total: 0,
+  };
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ total: 5 });
+    });
+  }
   render() {
     console.log("list list");
     return (
@@ -10,4 +17,4 @@ class About extends React.PureComponent {
     );
   }
 }
-export default About;
+export default Test;

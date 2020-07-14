@@ -3,7 +3,6 @@ import styles from "./index.module.less";
 import BreadcrumbView from "./breadcrumb";
 
 const PageHeader = (props) => {
-  console.log("PageHeader", props);
   const { title, content, hiddenBreadcrumb = false } = props;
   return (
     <div className={styles.pageHeader}>

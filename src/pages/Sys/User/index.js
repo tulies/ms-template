@@ -84,12 +84,13 @@ const rowSelection = {
 @observer
 class User extends React.PureComponent {
   state = {
+    tableLoading: true,
     addModalVisible: false,
     // detailDialogVisible: false,
     // multipleSelection: [],
     // currentRow: null,
-    // pageNum: 1,
-    // pageSize: 10,
+    pageNum: 0,
+    pageSize: 1,
 
     // // 查询过滤条件
     // sorter: {}, // 排序 sortfield: 'id', sorttype: 'asc'
@@ -116,25 +117,33 @@ class User extends React.PureComponent {
   }
   componentDidMount() {
     const { store } = this.props;
+    const { pageNum, pageSize } = this.state;
     store.User.queryUserList({
-      payload: {},
-      callback() {
-        console.log(1212);
+      payload: {
+        pageNum,
+        pageSize,
       },
+    }).then(() => {
+      this.setState({ tableLoading: false });
     });
   }
   handleShowAddModal() {
     this.setState({
       addModalVisible: true,
     });
-    console.log(this.props);
   }
   render() {
     const { store } = this.props;
-    store.User.userList && console.log(store.User.userList.list);
-    const { showMoreSearch, addModalVisible } = this.state;
+    // store.User.userList && console.log(store.User.userList.list);
+    const {
+      showMoreSearch,
+      addModalVisible,
+      tableLoading,
+      pageNum,
+      pageSize,
+    } = this.state;
 
-    const data = store.User.userList ? store.User.userList.list : [];
+    const { list: tableData, total } = store.User.listData;
     return (
       <PageWrapper>
         <PageHeader {...this.props} title="平台用户管理"></PageHeader>
@@ -203,19 +212,22 @@ class User extends React.PureComponent {
                   }}
                   rowKey="id"
                   columns={columns}
-                  dataSource={data}
+                  dataSource={tableData}
                   pagination={false}
                   size="middle"
+                  loading={tableLoading}
                 />
               </div>
               <div className="tulies-table-bd">
                 <div className="tulies-table-bd-left"></div>
                 <div className="tulies-table-bd-right">
                   <Pagination
-                    total={85}
+                    total={total}
                     showTotal={(total) => `共 ${total} 条`}
-                    defaultPageSize={20}
-                    defaultCurrent={1}
+                    defaultPageSize={1}
+                    defaultCurrent={20}
+                    current={pageNum + 1}
+                    pageSize={pageSize}
                   />
                 </div>
               </div>

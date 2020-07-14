@@ -4,16 +4,23 @@ import { queryUserList } from "@/services/UserService";
 configure({ enforceActions: "always" });
 
 class User {
-  @observable userList;
+  @observable listData = {
+    list: [],
+    pageNum: 0,
+    pageSize: 1,
+    total: 0,
+  };
 
   //   constructor() {}
 
   @action
   async queryUserList({ payload, callback }) {
-    const data = await queryUserList();
-    runInAction(() => {
-      this.userList = data;
-    });
+    const data = await queryUserList(payload);
+    if (data.code === 0) {
+      runInAction(() => {
+        this.listData = data.data;
+      });
+    }
     if (callback) callback(data);
   }
 }

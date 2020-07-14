@@ -19,7 +19,6 @@ class BasicLayout extends React.Component {
   };
 
   render() {
-    console.log("BasicLayout", this.props);
     const { children } = this.props;
     return (
       <Layout>

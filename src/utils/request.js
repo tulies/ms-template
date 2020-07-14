@@ -5,7 +5,7 @@ export function request(url, option) {
   };
   const options = {
     ...defaultOptions,
-    url: `${url}`,
+    url: `/api${url}`,
     ...option,
   };
   return new Promise((resolve, reject) => {
