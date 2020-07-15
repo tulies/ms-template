@@ -89,7 +89,7 @@ class User extends React.PureComponent {
     // detailDialogVisible: false,
     // multipleSelection: [],
     // currentRow: null,
-    pageNum: 0,
+    pageNum: 1,
     pageSize: 1,
 
     // // 查询过滤条件
@@ -97,41 +97,108 @@ class User extends React.PureComponent {
 
     /** ***********搜索用到的一些属性 ************/
     // showMoreSearchCheckbox: false,
-    showMoreSearch: false,
+    showMoreSearch: false, // 是否显示/使用高级搜索
     // moreSearchCheckList: [...initMoreSearchCheckList],
     // moreSeachProps: { ...moreSeachProps },
     // tableColumnCheckedList: [...initTableColumnCheckedList],
     // tableHeaderProps: { ...tableHeaderProps },
-    // simpleSearchObj: {
-    //   key: "",
-    //   value: "",
-    // },
-    // // 检索字段
-    // // filters: { ...defaultValues },
-    // tableFilters: {},
+    simpleSearchObj: {
+      key: "id",
+      value: null,
+    },
+    // 检索字段
+    filters: {}, // 检索区域的输入框检索条件
+    tableFilters: {}, // table页头的检索条件
   };
+  // 查询列表数据
+  queryListData() {
+    const { store } = this.props;
+    // const { pageNum, pageSize } = this.state;
+    this.setState({ tableLoading: true });
+    store.User.queryUserList({
+      payload: this.getQueryParams(),
+    }).then(() => {
+      this.setState({ tableLoading: false });
+    });
+  }
+  // 生成查询条件
+  getQueryParams() {
+    const { pageNum, pageSize } = this.state;
+    return {
+      pageNum,
+      pageSize,
+      ...this.getFiltersParams(),
+      // ...this.getSorterParams(),
+    };
+  }
+  // 获取检索条件字段
+  getFiltersParams() {
+    const { showMoreSearch, simpleSearchObj } = this.state;
+    let searchOptions = {};
+
+    // 如果是用普通搜索
+    if (!showMoreSearch) {
+      if (simpleSearchObj.key) {
+        searchOptions[simpleSearchObj.key] = simpleSearchObj.value;
+      }
+    } else {
+      searchOptions = {
+        ...this.filters,
+      };
+    }
+    searchOptions = {
+      ...searchOptions,
+      ...this.tableFilters,
+    };
+
+    console.log("searchOptions", searchOptions);
+    const searchParams = {};
+    const searchKeys = Object.keys(searchOptions).filter((key) => {
+      // 这个条件是为了减少不必要的参数，一大堆查询参数看着难受。
+      // 如果有特殊条件，比如就是要传空值，那么你就需要单独判断下。
+      if (searchOptions[key] === null || searchOptions[key] === "") {
+        return false;
+      }
+      return true;
+    });
+    searchKeys.forEach((key) => {
+      searchParams[key] = searchOptions[key];
+    });
+    return searchParams;
+  }
+
+  // // 重置查询
+  // handleReset() {
+  //   // this.initdata()
+  //   this.pagenum = 0;
+  //   this.simpleSearchObj = { key: "", value: "" };
+  //   this.filters = { ...defaultValues };
+  //   this.moreSearchCheckList = [...initMoreSearchCheckList];
+  //   // 表头的条件看自己需要，想加就加
+  //   // this.$refs.listTable.clearFilter()
+  //   console.log("handleReset", this.filters);
+  //   this.queryListData();
+  // }
+  // 页面切换时触发
+  handlePageChange(pageNum, pageSize) {
+    console.log("handlePageChange", pageNum, pageSize);
+    this.setState({ pageNum, pageSize });
+    this.queryListData();
+  }
   handleShowMoreSearch() {
     this.setState({
       showMoreSearch: true,
     });
   }
   componentDidMount() {
-    const { store } = this.props;
-    const { pageNum, pageSize } = this.state;
-    store.User.queryUserList({
-      payload: {
-        pageNum,
-        pageSize,
-      },
-    }).then(() => {
-      this.setState({ tableLoading: false });
-    });
+    this.queryListData();
   }
   handleShowAddModal() {
     this.setState({
       addModalVisible: true,
     });
   }
+
   render() {
     const { store } = this.props;
     // store.User.userList && console.log(store.User.userList.list);
@@ -226,8 +293,13 @@ class User extends React.PureComponent {
                     showTotal={(total) => `共 ${total} 条`}
                     defaultPageSize={1}
                     defaultCurrent={20}
-                    current={pageNum + 1}
+                    current={pageNum}
                     pageSize={pageSize}
+                    showQuickJumper={true}
+                    showSizeChanger={true}
+                    onChange={(page, pageSize) => {
+                      this.handlePageChange(page, pageSize);
+                    }}
                   />
                 </div>
               </div>

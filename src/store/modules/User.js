@@ -6,7 +6,7 @@ configure({ enforceActions: "always" });
 class User {
   @observable listData = {
     list: [],
-    pageNum: 0,
+    pageNum: 1,
     pageSize: 1,
     total: 0,
   };
