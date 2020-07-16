@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "antd": "^4.4.1",
     "axios": "^0.19.2",
+    "md5": "^2.2.1",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "react": "^16.13.1",

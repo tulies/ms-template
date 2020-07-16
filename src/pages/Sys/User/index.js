@@ -9,7 +9,7 @@ import {
   Form,
   Pagination,
   Badge,
-  message,
+  // message,
 } from "antd";
 
 import {
@@ -182,8 +182,9 @@ class User extends React.PureComponent {
   // 页面切换时触发
   handlePageChange(pageNum, pageSize) {
     console.log("handlePageChange", pageNum, pageSize);
-    this.setState({ pageNum, pageSize });
-    this.queryListData();
+    this.setState({ pageNum, pageSize }, () => {
+      this.queryListData();
+    });
   }
   handleShowMoreSearch() {
     this.setState({
@@ -199,6 +200,8 @@ class User extends React.PureComponent {
     });
   }
 
+  // 新增
+  addModalHandleOk() {}
   render() {
     const { store } = this.props;
     // store.User.userList && console.log(store.User.userList.list);
@@ -313,13 +316,9 @@ class User extends React.PureComponent {
               this.setState({ addModalVisible: false });
             }}
             handleOk={() => {
-              const key = "addModalHandleOk";
-              message.loading({ content: "正在处理中...", key });
-              setTimeout(() => {
-                this.setState({ addModalVisible: false });
-
-                message.success({ content: "处理完成！", key, duration: 2 });
-              }, 1000);
+              this.setState({ addModalVisible: false });
+              // 重新刷新下列表
+              this.queryListData();
             }}
           ></AddModal>
         ) : null}
