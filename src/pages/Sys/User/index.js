@@ -9,7 +9,7 @@ import {
   Form,
   Pagination,
   Badge,
-  // message,
+  Space,
 } from "antd";
 
 import {
@@ -17,8 +17,12 @@ import {
   PlusOutlined,
   SendOutlined,
   PoweroffOutlined,
-  // DeleteOutlined,
+  EditOutlined,
   DeleteRowOutlined,
+  DeleteOutlined,
+  // BarsOutlined,
+  // SettingOutlined,
+  SettingFilled,
   // MoreOutlined,
 } from "@ant-design/icons";
 import { observer, inject } from "mobx-react";
@@ -66,6 +70,30 @@ const columns = [
     title: "更新时间",
     dataIndex: "updateTime",
   },
+  {
+    title: ({ sortOrder, sortColumn, filters }) => {
+      return (
+        <span>
+          操作
+          <Tooltip title="列设置">
+            <Button type="link" icon={<SettingFilled />} />
+          </Tooltip>
+        </span>
+      );
+    },
+    key: "action",
+    render: (text, record) => (
+      <Space size={0}>
+        {/* <SettingOutlined /> */}
+        <Tooltip title="编辑">
+          <Button type="link" icon={<EditOutlined />} />
+        </Tooltip>
+        <Tooltip title="删除">
+          <Button type="link" icon={<DeleteOutlined />} />
+        </Tooltip>
+      </Space>
+    ),
+  },
 ];
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -90,7 +118,7 @@ class User extends React.PureComponent {
     // multipleSelection: [],
     // currentRow: null,
     pageNum: 1,
-    pageSize: 1,
+    pageSize: 10,
 
     // // 查询过滤条件
     // sorter: {}, // 排序 sortfield: 'id', sorttype: 'asc'
