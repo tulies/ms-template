@@ -10,6 +10,8 @@ import {
   Pagination,
   Badge,
   Space,
+  Dropdown,
+  Menu,
 } from "antd";
 
 import {
@@ -23,7 +25,8 @@ import {
   // BarsOutlined,
   // SettingOutlined,
   SettingFilled,
-  // MoreOutlined,
+  // EllipsisOutlined,
+  DownCircleOutlined,
 } from "@ant-design/icons";
 import { observer, inject } from "mobx-react";
 
@@ -32,69 +35,20 @@ import PageHeader from "../../../components/PageHeader";
 import PageContent from "../../../components/PageWrapper/Content";
 // 新增界面
 import AddModal from "./AddModal";
+import UpdateModal from "./UpdateModal";
 
 const { Search } = Input;
 const { Option } = Select;
 const statusMap = ["default", "processing", "error"];
 const status = ["新建", "启用中", "已停用"];
+const menu = (
+  <Menu>
+    <Menu.Item>启用</Menu.Item>
+    <Menu.Item>停用</Menu.Item>
+    <Menu.Item>删除</Menu.Item>
+  </Menu>
+);
 
-const columns = [
-  {
-    title: "ID",
-    dataIndex: "id",
-  },
-  {
-    title: "UID",
-    dataIndex: "uid",
-  },
-  {
-    title: "称呼",
-    dataIndex: "alias",
-  },
-  {
-    title: "帐号",
-    dataIndex: "username",
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    render(val) {
-      return <Badge status={statusMap[val]} text={status[val]} />;
-    },
-  },
-  {
-    title: "创建时间",
-    dataIndex: "createTime",
-  },
-  {
-    title: "更新时间",
-    dataIndex: "updateTime",
-  },
-  {
-    title: ({ sortOrder, sortColumn, filters }) => {
-      return (
-        <span>
-          操作
-          <Tooltip title="列设置">
-            <Button type="link" icon={<SettingFilled />} />
-          </Tooltip>
-        </span>
-      );
-    },
-    key: "action",
-    render: (text, record) => (
-      <Space size={0}>
-        {/* <SettingOutlined /> */}
-        <Tooltip title="编辑">
-          <Button type="link" icon={<EditOutlined />} />
-        </Tooltip>
-        <Tooltip title="删除">
-          <Button type="link" icon={<DeleteOutlined />} />
-        </Tooltip>
-      </Space>
-    ),
-  },
-];
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -114,9 +68,9 @@ class User extends React.PureComponent {
   state = {
     tableLoading: true,
     addModalVisible: false,
-    // detailDialogVisible: false,
+    updateModalVisible: false,
     // multipleSelection: [],
-    // currentRow: null,
+    currentRow: null,
     pageNum: 1,
     pageSize: 10,
 
@@ -227,18 +181,95 @@ class User extends React.PureComponent {
       addModalVisible: true,
     });
   }
+  handleShowUpdateModal(record) {
+    console.log("record", record);
+    this.setState({
+      currentRow: record,
+      updateModalVisible: true,
+    });
+  }
 
   // 新增
   addModalHandleOk() {}
   render() {
+    const columns = [
+      {
+        title: "ID",
+        dataIndex: "id",
+      },
+      {
+        title: "UID",
+        dataIndex: "uid",
+      },
+      {
+        title: "称呼",
+        dataIndex: "alias",
+      },
+      {
+        title: "帐号",
+        dataIndex: "username",
+      },
+      {
+        title: "状态",
+        dataIndex: "status",
+        render(val) {
+          return <Badge status={statusMap[val]} text={status[val]} />;
+        },
+      },
+      {
+        title: "创建时间",
+        dataIndex: "createTime",
+      },
+      {
+        title: "更新时间",
+        dataIndex: "updateTime",
+      },
+      {
+        title: ({ sortOrder, sortColumn, filters }) => {
+          return (
+            <span>
+              操作
+              <Tooltip title="列设置">
+                <Button type="link" icon={<SettingFilled />} />
+              </Tooltip>
+            </span>
+          );
+        },
+        key: "action",
+        render: (text, record) => (
+          <Space size={0}>
+            {/* <SettingOutlined /> */}
+            <Tooltip title="编辑">
+              <Button
+                type="link"
+                icon={<EditOutlined />}
+                onClick={() => {
+                  this.handleShowUpdateModal(record);
+                }}
+              />
+            </Tooltip>
+            <Tooltip title="删除">
+              <Button type="link" icon={<DeleteOutlined />} />
+            </Tooltip>
+
+            <Dropdown overlay={menu} placement="bottomCenter" arrow>
+              <Button type="link" icon={<DownCircleOutlined />} />
+            </Dropdown>
+          </Space>
+        ),
+      },
+    ];
+
     const { store } = this.props;
     // store.User.userList && console.log(store.User.userList.list);
     const {
       showMoreSearch,
       addModalVisible,
+      updateModalVisible,
       tableLoading,
       pageNum,
       pageSize,
+      currentRow,
     } = this.state;
 
     const { list: tableData, total } = store.User.listData;
@@ -259,8 +290,8 @@ class User extends React.PureComponent {
                   >
                     新增
                   </Button>
-                  <Button icon={<SendOutlined />}>发布</Button>
-                  <Button icon={<PoweroffOutlined />}>撤回</Button>
+                  <Button icon={<SendOutlined />}>启用</Button>
+                  <Button icon={<PoweroffOutlined />}>停用</Button>
                   <Button icon={<DeleteRowOutlined />}>删除</Button>
                 </div>
                 <div className="right-operator">
@@ -349,6 +380,21 @@ class User extends React.PureComponent {
               this.queryListData();
             }}
           ></AddModal>
+        ) : null}
+
+        {updateModalVisible && currentRow ? (
+          <UpdateModal
+            visible={updateModalVisible}
+            row={currentRow}
+            handleCancel={() => {
+              this.setState({ updateModalVisible: false });
+            }}
+            handleOk={() => {
+              this.setState({ updateModalVisible: false });
+              // 重新刷新下列表
+              this.queryListData();
+            }}
+          ></UpdateModal>
         ) : null}
       </PageWrapper>
     );

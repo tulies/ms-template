@@ -31,6 +31,12 @@ class User {
     // if (callback) callback(data);
     return data;
   }
+  @action
+  async queryUser({ payload }) {
+    const data = await createUser(payload);
+    // if (callback) callback(data);
+    return data;
+  }
 }
 const user = new User();
 export default user;
