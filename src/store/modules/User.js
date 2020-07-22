@@ -1,5 +1,11 @@
 import { observable, action, configure, runInAction } from "mobx";
-import { queryUserList, createUser } from "@/services/UserService";
+import {
+  queryUserList,
+  createUser,
+  updateUser,
+  changeStatus,
+  deleteUser,
+} from "@/services/UserService";
 // 不允许在动作外部修改状态
 configure({ enforceActions: "always" });
 
@@ -32,10 +38,50 @@ class User {
     return data;
   }
   @action
+  async updateUser({ payload }) {
+    const data = await updateUser(payload);
+    // if (callback) callback(data);
+    return data;
+  }
+  @action
   async queryUser({ payload }) {
     const data = await createUser(payload);
     // if (callback) callback(data);
     return data;
+  }
+  @action
+  async changeStatus({ payload }) {
+    const { ids, status } = payload;
+    let count = 0;
+
+    for (const id of ids) {
+      const res = await changeStatus({
+        id,
+        status,
+      });
+      if (res.code === 0) {
+        count = count + 1;
+      }
+    }
+    const result = {
+      count,
+    };
+    return result;
+  }
+  @action
+  async deleteUser({ payload }) {
+    const { ids } = payload;
+    let count = 0;
+    for (const id of ids) {
+      const res = await deleteUser({ id });
+      if (res.code === 0) {
+        count = count + 1;
+      }
+    }
+    const result = {
+      count,
+    };
+    return result;
   }
 }
 const user = new User();

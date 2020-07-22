@@ -12,6 +12,8 @@ import {
   Space,
   Dropdown,
   Menu,
+  message,
+  Modal,
 } from "antd";
 
 import {
@@ -19,13 +21,14 @@ import {
   PlusOutlined,
   SendOutlined,
   PoweroffOutlined,
-  EditOutlined,
+  FormOutlined,
   DeleteRowOutlined,
   DeleteOutlined,
   // BarsOutlined,
   // SettingOutlined,
   SettingFilled,
   // EllipsisOutlined,
+  ExclamationCircleOutlined,
   DownCircleOutlined,
 } from "@ant-design/icons";
 import { observer, inject } from "mobx-react";
@@ -41,27 +44,7 @@ const { Search } = Input;
 const { Option } = Select;
 const statusMap = ["default", "processing", "error"];
 const status = ["新建", "启用中", "已停用"];
-const menu = (
-  <Menu>
-    <Menu.Item>启用</Menu.Item>
-    <Menu.Item>停用</Menu.Item>
-    <Menu.Item>删除</Menu.Item>
-  </Menu>
-);
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === "Disabled User", // Column configuration not to be checked
-    name: record.name,
-  }),
-};
 @inject("store")
 @observer
 class User extends React.PureComponent {
@@ -73,6 +56,8 @@ class User extends React.PureComponent {
     currentRow: null,
     pageNum: 1,
     pageSize: 10,
+    selectedRowKeys: "",
+    selectedRows: [],
 
     // // 查询过滤条件
     // sorter: {}, // 排序 sortfield: 'id', sorttype: 'asc'
@@ -189,9 +174,137 @@ class User extends React.PureComponent {
     });
   }
 
+  // 删除记录 接受一个ids数组
+  handleDelete(records) {
+    const { store } = this.props;
+
+    const onlineRecords = records.filter((v) => v.status === 1);
+    if (onlineRecords.length > 0) {
+      message.error("正在启用的记录无法直接删除！");
+      return;
+    }
+    const ids = records.map((v) => v.id);
+
+    Modal.confirm({
+      title: "您确认删除这些记录吗？",
+      icon: <ExclamationCircleOutlined />,
+      onOk: () => {
+        message.loading({ content: "正在处理中...", key: "handleDelete" });
+
+        store.User.deleteUser({ payload: { ids } }).then((res) => {
+          const { count } = res;
+          message.success({
+            content: `成功删除${count}条数据!`,
+            key: "handleDelete",
+          });
+          const { list, total } = store.User.listData;
+          const { pageNum, pageSize } = this.state;
+
+          const precount = list.length;
+          // 判断一下count 是否与当前页面的记录条数相等，要是相等，就要查询前一页数据。
+          if (count === precount && pageNum * pageSize >= total) {
+            this.setState({ pageNum: pageNum - 1 }, () => {
+              this.queryListData();
+            });
+            return;
+          }
+          this.queryListData();
+        });
+      },
+      // onCancel() {
+      //   console.log("Cancel");
+      // },
+    });
+  }
+  handleOffline(records) {
+    const { store } = this.props;
+    const status = 2;
+    message.loading({ content: "正在处理中...", key: "handleOffline" });
+
+    const ids = records.map((v) => v.id);
+    store.User.changeStatus({ payload: { ids, status } }).then((res) => {
+      const { count } = res;
+      message.success({
+        content: `成功处理${count}条数据!`,
+        key: "handleOffline",
+      });
+      // todo 暂时我先偷懒直接刷新页面吧，以后优化
+      this.queryListData();
+    });
+  }
+  handleOnline(records) {
+    const { store } = this.props;
+    const status = 1;
+    message.loading({ content: "正在处理中...", key: "handleOnline" });
+
+    const ids = records.map((v) => v.id);
+    store.User.changeStatus({ payload: { ids, status } }).then((res) => {
+      const { count } = res;
+      message.success({
+        content: `成功处理${count}条数据!`,
+        key: "handleOnline",
+      });
+      // todo 暂时我先偷懒直接刷新页面吧，以后优化
+      this.queryListData();
+    });
+  }
+  // 指令操作
+  handleCommand(command, record) {
+    console.log("handleCommand", command, record);
+    // const { id } = record;
+    // this.currentRow = row;
+    if (command === "delete") {
+      // 删除
+      this.handleDelete([record]);
+    } else if (command === "online") {
+      // 上线
+      this.handleOnline([record]);
+    } else if (command === "offline") {
+      // 下线
+      this.handleOffline([record]);
+    }
+  }
+  // 批量操作
+  handleCommandBatch(command) {
+    const { selectedRows } = this.state;
+    console.log(selectedRows);
+    if (selectedRows.length < 1) {
+      message.error("请先选择你要操作的数据！");
+      return;
+    }
+    // const ids = selectedRows.map((v) => v.id);
+    if (command === "delete") {
+      // 删除
+      this.handleDelete(selectedRows);
+    } else if (command === "online") {
+      // 上线
+      this.handleOnline(selectedRows);
+    } else if (command === "offline") {
+      // 下线
+      this.handleOffline(selectedRows);
+    }
+  }
   // 新增
   addModalHandleOk() {}
   render() {
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        // console.log(
+        //   `selectedRowKeys: ${selectedRowKeys}`,
+        //   "selectedRows: ",
+        //   selectedRows
+        // );
+        this.setState({
+          selectedRowKeys,
+          selectedRows,
+        });
+      },
+      getCheckboxProps: (record) => ({
+        // admin用户不允许删除
+        // disabled: record.username === "admin", // Column configuration not to be checked
+        // name: record.name,
+      }),
+    };
     const columns = [
       {
         title: "ID",
@@ -239,26 +352,50 @@ class User extends React.PureComponent {
         render: (text, record) => (
           <Space size={0}>
             {/* <SettingOutlined /> */}
-            <Tooltip title="编辑">
+            <Tooltip title="详情编辑">
               <Button
                 type="link"
-                icon={<EditOutlined />}
+                icon={<FormOutlined />}
                 onClick={() => {
                   this.handleShowUpdateModal(record);
                 }}
               />
             </Tooltip>
             <Tooltip title="删除">
-              <Button type="link" icon={<DeleteOutlined />} />
+              <Button
+                type="link"
+                icon={<DeleteOutlined />}
+                onClick={() => {
+                  this.handleCommand("delete", record);
+                }}
+              />
             </Tooltip>
 
-            <Dropdown overlay={menu} placement="bottomCenter" arrow>
+            <Dropdown
+              overlay={() => {
+                return actionMenu(record);
+              }}
+              placement="bottomCenter"
+              arrow
+            >
               <Button type="link" icon={<DownCircleOutlined />} />
             </Dropdown>
           </Space>
         ),
       },
     ];
+
+    const actionMenu = (record) => (
+      <Menu
+        onClick={({ key }) => {
+          this.handleCommand(key, record);
+        }}
+      >
+        <Menu.Item key="online">启用</Menu.Item>
+        <Menu.Item key="offline">停用</Menu.Item>
+        <Menu.Item key="delete">删除</Menu.Item>
+      </Menu>
+    );
 
     const { store } = this.props;
     // store.User.userList && console.log(store.User.userList.list);
@@ -290,9 +427,30 @@ class User extends React.PureComponent {
                   >
                     新增
                   </Button>
-                  <Button icon={<SendOutlined />}>启用</Button>
-                  <Button icon={<PoweroffOutlined />}>停用</Button>
-                  <Button icon={<DeleteRowOutlined />}>删除</Button>
+                  <Button
+                    icon={<SendOutlined />}
+                    onClick={() => {
+                      this.handleCommandBatch("online");
+                    }}
+                  >
+                    启用
+                  </Button>
+                  <Button
+                    icon={<PoweroffOutlined />}
+                    onClick={() => {
+                      this.handleCommandBatch("offline");
+                    }}
+                  >
+                    停用
+                  </Button>
+                  <Button
+                    icon={<DeleteRowOutlined />}
+                    onClick={() => {
+                      this.handleCommandBatch("delete");
+                    }}
+                  >
+                    删除
+                  </Button>
                 </div>
                 <div className="right-operator">
                   <div className="mr-10">

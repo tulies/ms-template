@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, message, Switch, Drawer, Button } from "antd";
+import { Form, Input, message, Switch, Drawer, Button, Divider } from "antd";
 import { useStore } from "@/store/uses";
 export default function (props) {
   const { visible, handleOk, handleCancel, row } = props;
@@ -13,18 +13,19 @@ export default function (props) {
   // };
   const [form] = Form.useForm();
   console.log(form);
-  const onSubmit = (res) => {
-    console.log(res);
+  const onSubmit = () => {
     form.submit();
   };
   const onValuesChange = (res) => {
     console.log(res);
   };
   const handleSubmitFinish = (values) => {
-    const key = "addModalHandleOk";
+    // console.log(values);
+    // return;
+    const key = "updateModalHandleOk";
     message.loading({ content: "正在处理中...", key });
-    localStore.User.createUser({ payload: values }).then((res) => {
-      console.log(1111);
+    localStore.User.updateUser({ payload: values }).then((res) => {
+      console.log(res);
       if (res.code === 0) {
         message.success({ content: "处理成功！", key, duration: 2 });
         handleOk(values);
@@ -55,7 +56,7 @@ export default function (props) {
           <Button onClick={handleCancel} style={{ marginRight: 8 }}>
             Cancel
           </Button>
-          <Button onClick={handleCancel} type="primary">
+          <Button onClick={onSubmit} type="primary">
             Submit
           </Button>
         </div>
@@ -74,45 +75,44 @@ export default function (props) {
         <Form.Item label="ID" name="id" initialValue={row.id}>
           <Input disabled />
         </Form.Item>
-        <Form.Item label="UID" name="uid" initialValue={row.uid}>
-          <Input disabled />
+        <Form.Item label="用户ID">
+          <Input disabled value={row.uid} />
         </Form.Item>
         <Form.Item
           label="登录帐号"
           name="username"
+          initialValue={row.username}
           rules={[{ required: true, message: "请输入登录帐号!" }]}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="登录密码"
-          name="password"
-          hasFeedback
-          rules={[{ required: true, message: "请输入登录密码!" }]}
-        >
-          <Input.Password />
+          <Input placeholder="请输入登录帐号" />
         </Form.Item>
         <Form.Item
           label="用户称呼"
           name="alias"
+          initialValue={row.alias}
           rules={[{ required: true, message: "请输入用户称呼/昵称!" }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item
-          label="创建时间"
-          name="createTime"
-          initialValue={row.createTime}
-        >
-          <Input disabled />
+        <Form.Item label="创建时间">
+          <Input disabled value={row.createTime} />
         </Form.Item>
+        <Form.Item label="更新时间">
+          <Input disabled value={row.updateTime} />
+        </Form.Item>
+        <Divider orientation="center" plain>
+          更多操作
+        </Divider>
         <Form.Item
-          label="更新时间"
-          name="updateTime"
-          initialValue={row.updateTime}
+          label="是否启用"
+          valuePropName="checked"
+          initialValue={row.status === 1}
         >
-          <Input disabled />
+          <Switch checkedChildren="启用" unCheckedChildren="停用" />
+        </Form.Item>
+        <Form.Item label="其他操作">
+          <Button type="primary">重置密码</Button>
         </Form.Item>
       </Form>
     </Drawer>

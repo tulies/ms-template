@@ -11,7 +11,6 @@ export default function (props) {
   //   console.log(ppp);
   // };
   const [form] = Form.useForm();
-  console.log(form);
   const onSubmit = (res) => {
     console.log(res);
     form.submit();
