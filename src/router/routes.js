@@ -13,7 +13,7 @@ import UserLayout from "@/layouts/UserLayout";
 import About from "@/pages/About";
 import List from "@/pages/List";
 // import More from "../pages/More";
-import UserLogin from "@/pages/user/login";
+import UserLogin from "@/pages/User/Login";
 
 // 平台管理 - 平台用户管理
 import SysUser from "@/pages/Sys/User";
@@ -25,7 +25,7 @@ const routes = [
     routes: [
       {
         name: "login",
-        path: "/user/login",
+        path: "/User/Login",
         component: UserLogin,
         meta: {
           title: "商城首页",
