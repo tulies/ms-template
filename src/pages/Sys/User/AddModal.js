@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, Form, Input, message, Switch } from "antd";
 import { useStore } from "@/store/uses";
+import md5 from "md5";
 export default function (props) {
   const { visible, handleOk, handleCancel } = props;
   const localStore = useStore();
@@ -21,7 +22,9 @@ export default function (props) {
   const handleSubmitFinish = (values) => {
     const key = "addModalHandleOk";
     message.loading({ content: "正在处理中...", key });
-    localStore.User.createUser({ payload: values }).then((res) => {
+    localStore.User.createUser({
+      payload: { ...values, password: md5(values.password) },
+    }).then((res) => {
       console.log(1111);
       if (res.code === 0) {
         message.success({ content: "处理成功！", key, duration: 2 });

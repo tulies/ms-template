@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Checkbox, Divider } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import md5 from "md5";
 import styles from "./index.module.less";
+import { useStore } from "@/store/uses";
 const Login = (props) => {
+  const localStore = useStore();
   //   const { userAndlogin = {}, submitting } = props;
   //   const { status, type: loginType } = userAndlogin;
   //   const [autoLogin, setAutoLogin] = useState(true);
@@ -16,8 +19,13 @@ const Login = (props) => {
   //     //   payload: { ...values, type },
   //     // });
   //   };
-  const onFinish = (values) => {
+  const handleLoginSunmit = (values) => {
     console.log("Received values of form: ", values);
+    localStore.User.login({
+      payload: { ...values, password: md5(values.password) },
+    }).then((res) => {
+      console.log(res);
+    });
   };
   return (
     <div className={styles.main}>
@@ -29,25 +37,25 @@ const Login = (props) => {
         className={styles.loginForm}
         initialValues={{ remember: true }}
         size="large"
-        onFinish={onFinish}
+        onFinish={handleLoginSunmit}
       >
         <Form.Item
           name="username"
-          rules={[{ required: true, message: "Please input your Username!" }]}
+          rules={[{ required: true, message: "请输入您的账号!" }]}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Username"
+            placeholder="帐号"
           />
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: "Please input your Password!" }]}
+          rules={[{ required: true, message: "请输入您的密码!" }]}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            placeholder="Password"
+            placeholder="密码"
           />
         </Form.Item>
         <Form.Item>

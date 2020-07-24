@@ -14,3 +14,7 @@ export async function changeStatus(data) {
 export async function deleteUser(data) {
   return await request("/user/delete", { method: "POST", data });
 }
+
+export async function login(data) {
+  return await request("/user/login", { method: "POST", data });
+}

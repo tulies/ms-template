@@ -5,7 +5,10 @@ import {
   updateUser,
   changeStatus,
   deleteUser,
+  login,
 } from "@/services/UserService";
+import { setUserInfo } from "@/utils/authority";
+
 // 不允许在动作外部修改状态
 configure({ enforceActions: "always" });
 
@@ -17,7 +20,8 @@ class User {
     total: 0,
   };
 
-  //   constructor() {}
+  @observable userinfo = null;
+  // constructor() {}
 
   @action
   async queryUserList({ payload }) {
@@ -82,6 +86,18 @@ class User {
       count,
     };
     return result;
+  }
+  @action
+  async login({ payload }) {
+    // const { username, password } = payload
+    const res = await login(payload);
+    if (res.code === 0) {
+      setUserInfo(res.data);
+      runInAction(() => {
+        this.userinfo = res.data;
+      });
+    }
+    return res;
   }
 }
 const user = new User();

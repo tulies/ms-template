@@ -27,6 +27,7 @@ class BasicLayout extends React.Component {
           <Header
             collapsed={this.state.collapsed}
             handleMenuCollapse={this.handleMenuCollapse}
+            {...this.props}
           />
           <Content
             style={{
