@@ -1,30 +1,27 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-import { Form, Input, Button, Checkbox, Divider } from "antd";
+import { Form, Input, Button, Checkbox, Divider, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import md5 from "md5";
 import styles from "./index.module.less";
 import { useStore } from "@/store/uses";
 const Login = (props) => {
+  const { history } = props;
   const localStore = useStore();
-  //   const { userAndlogin = {}, submitting } = props;
-  //   const { status, type: loginType } = userAndlogin;
-  //   const [autoLogin, setAutoLogin] = useState(true);
-  //   const [type, setType] = useState("account");
-
-  //   const handleSubmit = (values) => {
-  //     console.log(values);
-  //     // const { dispatch } = props;
-  //     // dispatch({
-  //     //   type: "userAndlogin/login",
-  //     //   payload: { ...values, type },
-  //     // });
-  //   };
+  const [loginLoading, setLoginLoading] = useState(false);
   const handleLoginSunmit = (values) => {
-    console.log("Received values of form: ", values);
+    setLoginLoading(true);
     localStore.User.login({
       payload: { ...values, password: md5(values.password) },
     }).then((res) => {
+      setLoginLoading(false);
       console.log(res);
+      if (res.code === 0) {
+        message.success("登录成功");
+        history.push("/");
+      } else {
+        message.error(res.msg || "登录失败，请重试！");
+      }
     });
   };
   return (
@@ -63,14 +60,13 @@ const Login = (props) => {
             <Checkbox>自动登录</Checkbox>
           </Form.Item>
 
-          <a className={styles.loginFormForgot} href="">
-            忘记密码
-          </a>
+          <a className={styles.loginFormForgot}>忘记密码</a>
         </Form.Item>
 
         <Form.Item>
           <Button
             type="primary"
+            loading={loginLoading}
             htmlType="submit"
             className={styles.loginFormButton}
           >

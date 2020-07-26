@@ -106,10 +106,9 @@ export default class SiderMenu extends React.PureComponent {
   };
 
   render() {
-    const { collapsed } = this.props;
+    const { collapsed, location } = this.props;
     // const xxx = this.getNavMenuItems(routes[0].routes);
     // console.log("xxx", routes, xxx);
-
     return (
       <Sider
         id="components-layout-demo-side"
@@ -122,7 +121,15 @@ export default class SiderMenu extends React.PureComponent {
           <h1>天翼服务后台系统</h1>
           {/* <h1>上海钢琴服务后台</h1> */}
         </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={[location.pathname]}
+          defaultOpenKeys={[
+            location.pathname.split("/").slice(0, -1).join("/"),
+          ]}
+        >
           {this.getNavMenuItems(routes[1].routes)}
         </Menu>
       </Sider>

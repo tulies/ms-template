@@ -40,12 +40,6 @@ const routes = [
     component: BasicLayout,
     // exact: true,
     routes: [
-      // {
-      //   name: "",
-      //   path: "/",
-      //   component: PlatUser,
-      //   icon: MehOutlined,
-      // },
       {
         name: "平台管理",
         path: "/sys",
