@@ -16,7 +16,6 @@ const CodePreview = ({ children }) => (
 
 export default (props) => (
   <PageWrapper>
-    <PageHeader {...props} title="平台用户管理"></PageHeader>
     <PageContent {...props}>
       <Card>
         <Alert

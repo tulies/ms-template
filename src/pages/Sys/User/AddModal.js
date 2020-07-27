@@ -73,7 +73,7 @@ export default function (props) {
           <Input.Password />
         </Form.Item>
         <Form.Item
-          label="用户称呼"
+          label="用户昵称"
           name="alias"
           rules={[{ required: true, message: "请输入用户称呼/昵称!" }]}
         >

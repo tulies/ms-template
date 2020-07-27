@@ -17,7 +17,8 @@ import {
 } from "antd";
 
 import {
-  DownSquareOutlined,
+  // DownSquareOutlined,
+  // UpSquareOutlined,
   PlusOutlined,
   SendOutlined,
   PoweroffOutlined,
@@ -30,6 +31,11 @@ import {
   // EllipsisOutlined,
   ExclamationCircleOutlined,
   DownCircleOutlined,
+  CloseOutlined,
+  SearchOutlined,
+  FileSearchOutlined,
+  DoubleRightOutlined,
+  RedoOutlined,
 } from "@ant-design/icons";
 import { observer, inject } from "mobx-react";
 
@@ -65,16 +71,17 @@ class User extends React.PureComponent {
     /** ***********搜索用到的一些属性 ************/
     // showMoreSearchCheckbox: false,
     showMoreSearch: false, // 是否显示/使用高级搜索
+    displaySearchForm: true, // 样式控制显示或者隐藏
     // moreSearchCheckList: [...initMoreSearchCheckList],
     // moreSeachProps: { ...moreSeachProps },
     // tableColumnCheckedList: [...initTableColumnCheckedList],
     // tableHeaderProps: { ...tableHeaderProps },
     simpleSearchObj: {
-      key: "id",
-      value: null,
+      key: "title",
+      value: "",
     },
     // 检索字段
-    filters: {}, // 检索区域的输入框检索条件
+    moreFilters: {}, // 高级检索区域的输入框检索条件
     tableFilters: {}, // table页头的检索条件
   };
   // 查询列表数据
@@ -100,7 +107,12 @@ class User extends React.PureComponent {
   }
   // 获取检索条件字段
   getFiltersParams() {
-    const { showMoreSearch, simpleSearchObj } = this.state;
+    const {
+      showMoreSearch,
+      simpleSearchObj,
+      moreFilters,
+      tableFilters,
+    } = this.state;
     let searchOptions = {};
 
     // 如果是用普通搜索
@@ -110,12 +122,12 @@ class User extends React.PureComponent {
       }
     } else {
       searchOptions = {
-        ...this.filters,
+        ...moreFilters,
       };
     }
     searchOptions = {
       ...searchOptions,
-      ...this.tableFilters,
+      ...tableFilters,
     };
 
     console.log("searchOptions", searchOptions);
@@ -153,11 +165,6 @@ class User extends React.PureComponent {
       this.queryListData();
     });
   }
-  handleShowMoreSearch() {
-    this.setState({
-      showMoreSearch: true,
-    });
-  }
   componentDidMount() {
     this.queryListData();
   }
@@ -177,7 +184,6 @@ class User extends React.PureComponent {
   // 删除记录 接受一个ids数组
   handleDelete(records) {
     const { store } = this.props;
-
     const onlineRecords = records.filter((v) => v.status === 1);
     if (onlineRecords.length > 0) {
       message.error("正在启用的记录无法直接删除！");
@@ -407,6 +413,9 @@ class User extends React.PureComponent {
       pageNum,
       pageSize,
       currentRow,
+      simpleSearchObj,
+      displaySearchForm,
+      moreFilters,
     } = this.state;
 
     const { list: tableData, total } = store.User.listData;
@@ -452,41 +461,143 @@ class User extends React.PureComponent {
                     删除
                   </Button>
                 </div>
-                <div className="right-operator">
-                  <div className="mr-10">
-                    <Input.Group compact>
-                      <Select defaultValue="Option1">
-                        <Option value="Option1">标题</Option>
-                        <Option value="Option2">ID</Option>
-                      </Select>
-                      <Search
-                        placeholder="请输入搜索关键字"
-                        onSearch={(value) => console.log(value)}
-                        style={{ width: 180 }}
-                      ></Search>
-                    </Input.Group>
-                  </div>
-                  <Tooltip title="高级查询">
+                {showMoreSearch ? (
+                  <div className="right-operator">
                     <Button
-                      icon={<DownSquareOutlined />}
-                      onClick={() => this.handleShowMoreSearch(true)}
+                      type="primary"
+                      ghost
+                      icon={<SearchOutlined />}
+                      onClick={() => {
+                        this.queryListData();
+                      }}
+                    >
+                      点击查询
+                    </Button>
+                    <Tooltip title="收起条件">
+                      <Button
+                        icon={
+                          <DoubleRightOutlined
+                            rotate={displaySearchForm ? -90 : 90}
+                          />
+                        }
+                        onClick={() => {
+                          console.log(this.state.displaySearchForm);
+                          this.setState({
+                            displaySearchForm: !displaySearchForm,
+                          });
+                        }}
+                      ></Button>
+                    </Tooltip>
+                    <Tooltip title="重置查询">
+                      <Button
+                        icon={<RedoOutlined />}
+                        onClick={() => {}}
+                      ></Button>
+                    </Tooltip>
+                    <Tooltip title="退出高级查询">
+                      <Button
+                        icon={<CloseOutlined />}
+                        onClick={() => {
+                          this.setState({
+                            showMoreSearch: false,
+                            displaySearchForm: true,
+                          });
+                        }}
+                      ></Button>
+                    </Tooltip>
+                  </div>
+                ) : (
+                  <div className="right-operator">
+                    <div className="mr-10">
+                      <Input.Group compact>
+                        <Select
+                          defaultValue={simpleSearchObj.key}
+                          onChange={(value, option) => {
+                            console.log(value);
+                            this.setState({
+                              simpleSearchObj: { key: value },
+                            });
+                          }}
+                        >
+                          <Option value="title">标题</Option>
+                          <Option value="id">ID</Option>
+                        </Select>
+                        <Search
+                          placeholder="请输入搜索关键字"
+                          // value={simpleSearchObj.value}
+                          onSearch={(value) => {
+                            console.log(value);
+                            this.setState(
+                              {
+                                simpleSearchObj: {
+                                  ...simpleSearchObj,
+                                  value,
+                                },
+                              },
+                              () => {
+                                this.queryListData();
+                              }
+                            );
+                          }}
+                          style={{ width: 180 }}
+                        ></Search>
+                      </Input.Group>
+                    </div>
+                    <Button
+                      icon={<FileSearchOutlined />}
+                      onClick={() => {
+                        this.setState({ showMoreSearch: true });
+                      }}
                     >
                       高级查询
                     </Button>
-                  </Tooltip>
-                  {/* <Tooltip title="更多菜单">
+                  </div>
+                )}
+                {/* <Tooltip title="更多菜单">
                     <Button icon={<MoreOutlined />} />
                   </Tooltip> */}
-                </div>
               </div>
               {!showMoreSearch ? null : (
-                <div className="tulies-table-search-options">
-                  <Form layout="inline">
-                    <Form.Item label="Field A">
-                      <Input placeholder="input placeholder" />
+                <div
+                  className="tulies-table-search-options"
+                  style={{ display: displaySearchForm ? "block" : "none" }}
+                >
+                  <Form
+                    layout="inline"
+                    onValuesChange={(values) => {
+                      console.log(values);
+                      this.setState({
+                        moreFilters: { ...moreFilters, ...values },
+                      });
+                    }}
+                  >
+                    <Form.Item
+                      label="ID"
+                      initialValue={moreFilters.id}
+                      name="id"
+                    >
+                      <Input placeholder="ID" />
                     </Form.Item>
-                    <Form.Item label="Field B">
-                      <Input placeholder="input placeholder" />
+                    <Form.Item
+                      label="用户ID"
+                      initialValue={moreFilters.uid}
+                      name="uid"
+                    >
+                      <Input placeholder="用户ID" />
+                    </Form.Item>
+                    <Form.Item
+                      label="用户昵称"
+                      initialValue={moreFilters.alias}
+                      name="alias"
+                    >
+                      <Input placeholder="称呼、昵称" />
+                    </Form.Item>
+                    <Form.Item
+                      label="用户账号"
+                      initialValue={moreFilters.username}
+                      name="username"
+                    >
+                      <Input placeholder="用户账号" />
                     </Form.Item>
                   </Form>
                 </div>

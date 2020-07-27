@@ -87,7 +87,7 @@ export default function (props) {
           <Input placeholder="请输入登录帐号" />
         </Form.Item>
         <Form.Item
-          label="用户称呼"
+          label="用户昵称"
           name="alias"
           initialValue={row.alias}
           rules={[{ required: true, message: "请输入用户称呼/昵称!" }]}
