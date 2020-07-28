@@ -25,7 +25,7 @@ const routes = [
     routes: [
       {
         name: "login",
-        path: "/User/Login",
+        path: "/user/login",
         component: UserLogin,
         meta: {
           title: "商城首页",

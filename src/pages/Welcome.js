@@ -3,7 +3,7 @@ import { Card, Alert, Typography } from "antd";
 import styles from "./Welcome.less";
 
 import PageWrapper from "@/components/PageWrapper";
-import PageHeader from "@/components/PageHeader";
+// import PageHeader from "@/components/PageHeader";
 import PageContent from "@/components/PageWrapper/Content";
 
 const CodePreview = ({ children }) => (

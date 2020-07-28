@@ -50,7 +50,10 @@ const { Search } = Input;
 const { Option } = Select;
 const statusMap = ["default", "processing", "error"];
 const status = ["新建", "启用中", "已停用"];
-
+const getValue = (obj) =>
+  Object.keys(obj)
+    .map((key) => obj[key])
+    .join(",");
 @inject("store")
 @observer
 class User extends React.PureComponent {
@@ -66,7 +69,7 @@ class User extends React.PureComponent {
     selectedRows: [],
 
     // // 查询过滤条件
-    // sorter: {}, // 排序 sortfield: 'id', sorttype: 'asc'
+    sorter: {}, // 排序 sortfield: 'id', sorttype: 'asc'
 
     /** ***********搜索用到的一些属性 ************/
     // showMoreSearchCheckbox: false,
@@ -102,7 +105,7 @@ class User extends React.PureComponent {
       pageNum,
       pageSize,
       ...this.getFiltersParams(),
-      // ...this.getSorterParams(),
+      ...this.getSorterParams(),
     };
   }
   // 获取检索条件字段
@@ -144,6 +147,18 @@ class User extends React.PureComponent {
       searchParams[key] = searchOptions[key];
     });
     return searchParams;
+  }
+
+  // 获取排序参数
+  getSorterParams() {
+    const { sorter } = this.state;
+    if (sorter && sorter.sortfield && sorter.sorttype) {
+      const { sortfield, sorttype } = sorter;
+      return {
+        sorter: `${sortfield} ${sorttype}`,
+      };
+    }
+    return {};
   }
 
   // // 重置查询
@@ -327,10 +342,38 @@ class User extends React.PureComponent {
       {
         title: "帐号",
         dataIndex: "username",
+        filters: [
+          {
+            text: "新建",
+            value: 0,
+          },
+          {
+            text: "启用",
+            value: 1,
+          },
+          {
+            text: "停用",
+            value: 2,
+          },
+        ],
       },
       {
         title: "状态",
         dataIndex: "status",
+        filters: [
+          {
+            text: "新建",
+            value: 0,
+          },
+          {
+            text: "启用",
+            value: 1,
+          },
+          {
+            text: "停用",
+            value: 2,
+          },
+        ],
         render(val) {
           return <Badge status={statusMap[val]} text={status[val]} />;
         },
@@ -338,6 +381,7 @@ class User extends React.PureComponent {
       {
         title: "创建时间",
         dataIndex: "createTime",
+        sorter: true,
       },
       {
         title: "更新时间",
@@ -614,6 +658,33 @@ class User extends React.PureComponent {
                   pagination={false}
                   size="middle"
                   loading={tableLoading}
+                  onChange={(pagination, filtersArg, sorter) => {
+                    let state = {};
+                    console.log(pagination, filtersArg, sorter);
+
+                    const filters = Object.keys(filtersArg).reduce(
+                      (obj, key) => {
+                        const newObj = { ...obj };
+                        newObj[key] = getValue(filtersArg[key]);
+                        return newObj;
+                      },
+                      {}
+                    );
+                    console.log(filters);
+
+                    if (sorter.field) {
+                      state = {
+                        ...state,
+                        sorter: {
+                          sortfield: sorter.field,
+                          sorttype: sorter.order,
+                        },
+                      };
+                    }
+                    this.setState({ ...state }, () => {
+                      this.queryListData();
+                    });
+                  }}
                 />
               </div>
               <div className="tulies-table-bd">
