@@ -1,25 +1,25 @@
 import React from "react";
 import { Card, Alert, Typography } from "antd";
-import styles from "./Welcome.less";
 
 import PageWrapper from "@/components/PageWrapper";
 // import PageHeader from "@/components/PageHeader";
 import PageContent from "@/components/PageWrapper/Content";
 
-const CodePreview = ({ children }) => (
-  <pre className={styles.pre}>
-    <code>
-      <Typography.Text copyable>{children}</Typography.Text>
-    </code>
-  </pre>
-);
+// const CodePreview = ({ children }) => (
+//   <pre className={styles.pre}>
+//     <code>
+//       <Typography.Text copyable>{children}</Typography.Text>
+//     </code>
+//   </pre>
+// );
+const { Title, Paragraph } = Typography;
 
 export default (props) => (
   <PageWrapper>
     <PageContent {...props}>
       <Card>
         <Alert
-          message="更快更强的重型组件，已经发布。"
+          message="本系统前端使用react+mobx+hooks+antd开发，不过没有使用typescript。完全按照自己的想法在搞，一边学习一边摸索。"
           type="success"
           showIcon
           banner
@@ -28,33 +28,14 @@ export default (props) => (
             marginBottom: 24,
           }}
         />
-        <Typography.Text strong>
-          高级表格{" "}
-          <a
-            href="https://protable.ant.design/"
-            rel="noopener noreferrer"
-            target="__blank"
-          >
-            欢迎使用
-          </a>
-        </Typography.Text>
-        <CodePreview>yarn add @ant-design/pro-table</CodePreview>
-        <Typography.Text
-          strong
-          style={{
-            marginBottom: 12,
-          }}
-        >
-          高级布局{" "}
-          <a
-            href="https://prolayout.ant.design/"
-            rel="noopener noreferrer"
-            target="__blank"
-          >
-            欢迎使用
-          </a>
-        </Typography.Text>
-        <CodePreview>yarn add @ant-design/pro-layout</CodePreview>
+        <Title level={3}>开发计划 </Title>
+        <Paragraph>
+          <ul>
+            <li>自动生成表单集成</li>
+            <li>markdown编辑器集成</li>
+            <li>列设置功能开发</li>
+          </ul>
+        </Paragraph>
       </Card>
     </PageContent>
   </PageWrapper>

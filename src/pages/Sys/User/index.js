@@ -67,7 +67,6 @@ class User extends React.PureComponent {
     pageSize: 10,
     selectedRowKeys: "",
     selectedRows: [],
-
     // // 查询过滤条件
     sorter: {}, // 排序 sortfield: 'id', sorttype: 'asc'
 
@@ -80,12 +79,15 @@ class User extends React.PureComponent {
     // tableColumnCheckedList: [...initTableColumnCheckedList],
     // tableHeaderProps: { ...tableHeaderProps },
     simpleSearchObj: {
-      key: "title",
+      key: "alias",
       value: "",
     },
     // 检索字段
     moreFilters: {}, // 高级检索区域的输入框检索条件
     tableFilters: {}, // table页头的检索条件
+
+    // antdFilteredInfo: null,
+    // antdFilteredInfo: sortedInfo,
   };
   // 查询列表数据
   queryListData() {
@@ -128,9 +130,19 @@ class User extends React.PureComponent {
         ...moreFilters,
       };
     }
+
+    // 处理表头的数据
+    const newTableFilters = Object.keys(tableFilters).reduce((obj, key) => {
+      const newObj = { ...obj };
+      if (tableFilters[key]) {
+        newObj[key] = getValue(tableFilters[key]);
+      }
+      return newObj;
+    }, {});
+
     searchOptions = {
       ...searchOptions,
-      ...tableFilters,
+      ...newTableFilters,
     };
 
     console.log("searchOptions", searchOptions);
@@ -152,27 +164,38 @@ class User extends React.PureComponent {
   // 获取排序参数
   getSorterParams() {
     const { sorter } = this.state;
-    if (sorter && sorter.sortfield && sorter.sorttype) {
-      const { sortfield, sorttype } = sorter;
+    if (sorter && sorter.field && sorter.order) {
+      const { field, order } = sorter;
       return {
-        sorter: `${sortfield} ${sorttype}`,
+        sorter: `${field} ${order}`,
       };
     }
     return {};
   }
 
-  // // 重置查询
-  // handleReset() {
-  //   // this.initdata()
-  //   this.pagenum = 0;
-  //   this.simpleSearchObj = { key: "", value: "" };
-  //   this.filters = { ...defaultValues };
-  //   this.moreSearchCheckList = [...initMoreSearchCheckList];
-  //   // 表头的条件看自己需要，想加就加
-  //   // this.$refs.listTable.clearFilter()
-  //   console.log("handleReset", this.filters);
-  //   this.queryListData();
-  // }
+  // 重置查询
+  handleReset() {
+    // this.initdata()
+    this.setState(
+      {
+        ...this.state,
+        pagenum: 0,
+        simpleSearchObj: {
+          key: "alias",
+          value: "",
+        },
+        moreFilters: {},
+        // tableFilters: {}, //  如果你想重置表头的查询条件，就去掉注释
+        // sorter: {}, // 如果你想重置排序条件，就去掉注释
+      },
+      () => {
+        // 表头的条件看自己需要，想加就加
+        // this.$refs.listTable.clearFilter()
+        // console.log("handleReset", this.filters);
+        this.queryListData();
+      }
+    );
+  }
   // 页面切换时触发
   handlePageChange(pageNum, pageSize) {
     console.log("handlePageChange", pageNum, pageSize);
@@ -308,6 +331,25 @@ class User extends React.PureComponent {
   // 新增
   addModalHandleOk() {}
   render() {
+    const { store } = this.props;
+    // store.User.userList && console.log(store.User.userList.list);
+    const {
+      showMoreSearch,
+      addModalVisible,
+      updateModalVisible,
+      tableLoading,
+      pageNum,
+      pageSize,
+      currentRow,
+      simpleSearchObj,
+      displaySearchForm,
+      moreFilters,
+      tableFilters,
+      sorter,
+    } = this.state;
+
+    const { list: tableData, total } = store.User.listData;
+
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
         // console.log(
@@ -322,7 +364,7 @@ class User extends React.PureComponent {
       },
       getCheckboxProps: (record) => ({
         // admin用户不允许删除
-        // disabled: record.username === "admin", // Column configuration not to be checked
+        disabled: record.username === "admin", // Column configuration not to be checked
         // name: record.name,
       }),
     };
@@ -342,24 +384,11 @@ class User extends React.PureComponent {
       {
         title: "帐号",
         dataIndex: "username",
-        filters: [
-          {
-            text: "新建",
-            value: 0,
-          },
-          {
-            text: "启用",
-            value: 1,
-          },
-          {
-            text: "停用",
-            value: 2,
-          },
-        ],
       },
       {
         title: "状态",
         dataIndex: "status",
+        filteredValue: tableFilters.status || null,
         filters: [
           {
             text: "新建",
@@ -382,10 +411,15 @@ class User extends React.PureComponent {
         title: "创建时间",
         dataIndex: "createTime",
         sorter: true,
+        sortOrder:
+          sorter.field && sorter.field === "createTime" && sorter.order,
       },
       {
         title: "更新时间",
         dataIndex: "updateTime",
+        sorter: true,
+        sortOrder:
+          sorter.field && sorter.field === "updateTime" && sorter.order,
       },
       {
         title: ({ sortOrder, sortColumn, filters }) => {
@@ -447,22 +481,6 @@ class User extends React.PureComponent {
       </Menu>
     );
 
-    const { store } = this.props;
-    // store.User.userList && console.log(store.User.userList.list);
-    const {
-      showMoreSearch,
-      addModalVisible,
-      updateModalVisible,
-      tableLoading,
-      pageNum,
-      pageSize,
-      currentRow,
-      simpleSearchObj,
-      displaySearchForm,
-      moreFilters,
-    } = this.state;
-
-    const { list: tableData, total } = store.User.listData;
     return (
       <PageWrapper>
         <PageHeader {...this.props} title="平台用户管理"></PageHeader>
@@ -535,7 +553,9 @@ class User extends React.PureComponent {
                     <Tooltip title="重置查询">
                       <Button
                         icon={<RedoOutlined />}
-                        onClick={() => {}}
+                        onClick={() => {
+                          this.handleReset();
+                        }}
                       ></Button>
                     </Tooltip>
                     <Tooltip title="退出高级查询">
@@ -563,7 +583,7 @@ class User extends React.PureComponent {
                             });
                           }}
                         >
-                          <Option value="title">标题</Option>
+                          <Option value="alias">标题</Option>
                           <Option value="id">ID</Option>
                         </Select>
                         <Search
@@ -658,32 +678,17 @@ class User extends React.PureComponent {
                   pagination={false}
                   size="middle"
                   loading={tableLoading}
-                  onChange={(pagination, filtersArg, sorter) => {
-                    let state = {};
-                    console.log(pagination, filtersArg, sorter);
-
-                    const filters = Object.keys(filtersArg).reduce(
-                      (obj, key) => {
-                        const newObj = { ...obj };
-                        newObj[key] = getValue(filtersArg[key]);
-                        return newObj;
+                  onChange={(pagination, tableFilters, sorter) => {
+                    // console.log(pagination, tableFilters, sorter);
+                    this.setState(
+                      {
+                        tableFilters,
+                        sorter,
                       },
-                      {}
+                      () => {
+                        this.queryListData();
+                      }
                     );
-                    console.log(filters);
-
-                    if (sorter.field) {
-                      state = {
-                        ...state,
-                        sorter: {
-                          sortfield: sorter.field,
-                          sorttype: sorter.order,
-                        },
-                      };
-                    }
-                    this.setState({ ...state }, () => {
-                      this.queryListData();
-                    });
                   }}
                 />
               </div>
