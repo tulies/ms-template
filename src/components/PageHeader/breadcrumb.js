@@ -3,7 +3,7 @@ import pathToRegexp from "path-to-regexp";
 import { Breadcrumb } from "antd";
 import styles from "./index.module.less";
 import { urlToList } from "../_utils/pathTools";
-// import { HomeOutlined, UserOutlined } from "@ant-design/icons";
+import { HomeOutlined } from "@ant-design/icons";
 import routes from "@/router/routes";
 
 export const getBreadcrumb = (breadcrumbNameMap, url) => {
@@ -145,7 +145,7 @@ export default class BreadcrumbView extends PureComponent {
           {
             [linkElement === "a" ? "href" : "to"]: "/",
           },
-          home || "Home"
+          home || <HomeOutlined />
         )}
       </Breadcrumb.Item>
     );

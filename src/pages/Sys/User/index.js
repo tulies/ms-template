@@ -39,9 +39,9 @@ import {
 } from "@ant-design/icons";
 import { observer, inject } from "mobx-react";
 
-import PageWrapper from "../../../components/PageWrapper";
-import PageHeader from "../../../components/PageHeader";
-import PageContent from "../../../components/PageWrapper/Content";
+import PageWrapper from "@/components/PageWrapper";
+import PageHeader from "@/components/PageHeader";
+import PageContent from "@/components/PageWrapper/Content";
 // 新增界面
 import AddModal from "./AddModal";
 import UpdateModal from "./UpdateModal";

@@ -8,10 +8,7 @@ import {
 import BasicLayout from "@/layouts/BasicLayout";
 import UserLayout from "@/layouts/UserLayout";
 
-// import Main from "../pages/Main";
-// import About from "@/pages/About";
-// import List from "@/pages/List";
-// import More from "../pages/More";
+import OperateData from "@/pages/Operate/Data";
 import UserLogin from "@/pages/User/Login";
 
 // 平台管理 - 平台用户管理
@@ -40,6 +37,19 @@ const routes = [
     // exact: true,
     children: [
       {
+        name: "运营编辑",
+        path: "/operate",
+        // component: List,
+        icon: HomeOutlined,
+        children: [
+          {
+            name: "区块推荐",
+            path: "/operate/data",
+            component: OperateData,
+          },
+        ],
+      },
+      {
         name: "平台管理",
         path: "/sys",
         // component: BlankLayout,
@@ -48,29 +58,6 @@ const routes = [
           {
             name: "平台用户管理",
             path: "/sys/user",
-            component: SysUser,
-          },
-        ],
-      },
-      {
-        name: "运营编辑",
-        path: "/list",
-        // component: List,
-        icon: HomeOutlined,
-        children: [
-          {
-            name: "首页推荐",
-            path: "/list/a",
-            component: SysUser,
-          },
-          {
-            name: "保养知识",
-            path: "/list/b",
-            component: SysUser,
-          },
-          {
-            name: "活动推荐",
-            path: "/list/c",
             component: SysUser,
           },
         ],
