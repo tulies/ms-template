@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 // import About from './pages/About';
 // import List from './pages/List';
 import routes from "./router/routes";
+import BlankLayout from "@/layouts/BlankLayout";
 
 function App() {
   return (
@@ -19,14 +20,14 @@ function App() {
           // if (router.layout) {
           //   return (
           //     <router.component key={index}>
-          //       {router.routes.map((router2, index2) => {
+          //       {router.children.map((router2, index2) => {
           //         return (
           //           <Route
           //             exact
           //             key={index2}
           //             path={router2.path}
           //             render={(props) => (
-          //               <router2.component {...props} routes={router2.routes} />
+          //               <router2.component {...props} routes={router2.children} />
           //             )}
           //           />
           //         );
@@ -41,41 +42,47 @@ function App() {
               exact={router.exac}
               key={index}
               path={router.path}
-              render={(props) => (
-                <router.component {...props} routes={router.routes}>
-                  {router.routes.map((router2, index2) => {
-                    return (
-                      <Route
-                        key={index2}
-                        path={router2.path}
-                        render={(props2) => (
-                          <router2.component
-                            {...props2}
-                            routes={router2.routes}
-                          >
-                            {router2.routes &&
-                              router2.routes.map((router3, index3) => {
-                                return (
-                                  <Route
-                                    exact
-                                    key={index3}
-                                    path={router3.path}
-                                    render={(props3) => (
-                                      <router3.component
-                                        {...props3}
-                                        routes={router2.routes}
-                                      ></router3.component>
-                                    )}
-                                  />
-                                );
-                              })}
-                          </router2.component>
-                        )}
-                      />
-                    );
-                  })}
-                </router.component>
-              )}
+              render={(props) => {
+                return (
+                  <router.component {...props} routes={router.children}>
+                    {router.children.map((router2, index2) => {
+                      return (
+                        <Route
+                          key={index2}
+                          path={router2.path}
+                          render={(props2) => {
+                            const RouterChild2 =
+                              router2.component || BlankLayout;
+                            return (
+                              <RouterChild2
+                                {...props2}
+                                routes={router2.children}
+                              >
+                                {router2.children &&
+                                  router2.children.map((router3, index3) => {
+                                    return (
+                                      <Route
+                                        exact
+                                        key={index3}
+                                        path={router3.path}
+                                        render={(props3) => (
+                                          <router3.component
+                                            {...props3}
+                                            routes={router2.children}
+                                          ></router3.component>
+                                        )}
+                                      />
+                                    );
+                                  })}
+                              </RouterChild2>
+                            );
+                          }}
+                        />
+                      );
+                    })}
+                  </router.component>
+                );
+              }}
             />
           );
         })}

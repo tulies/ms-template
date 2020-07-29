@@ -15,7 +15,7 @@ import {
   message,
   Modal,
 } from "antd";
-
+// import { FormInstance } from "antd/lib/form";
 import {
   // DownSquareOutlined,
   // UpSquareOutlined,
@@ -54,9 +54,11 @@ const getValue = (obj) =>
   Object.keys(obj)
     .map((key) => obj[key])
     .join(",");
+
 @inject("store")
 @observer
 class User extends React.PureComponent {
+  searchFormRef = React.createRef();
   state = {
     tableLoading: true,
     addModalVisible: false,
@@ -85,7 +87,7 @@ class User extends React.PureComponent {
     // 检索字段
     moreFilters: {}, // 高级检索区域的输入框检索条件
     tableFilters: {}, // table页头的检索条件
-
+    searchForm: null,
     // antdFilteredInfo: null,
     // antdFilteredInfo: sortedInfo,
   };
@@ -160,7 +162,6 @@ class User extends React.PureComponent {
     });
     return searchParams;
   }
-
   // 获取排序参数
   getSorterParams() {
     const { sorter } = this.state;
@@ -172,10 +173,10 @@ class User extends React.PureComponent {
     }
     return {};
   }
-
   // 重置查询
   handleReset() {
     // this.initdata()
+
     this.setState(
       {
         ...this.state,
@@ -189,6 +190,7 @@ class User extends React.PureComponent {
         // sorter: {}, // 如果你想重置排序条件，就去掉注释
       },
       () => {
+        this.searchFormRef.current.resetFields();
         // 表头的条件看自己需要，想加就加
         // this.$refs.listTable.clearFilter()
         // console.log("handleReset", this.filters);
@@ -203,9 +205,6 @@ class User extends React.PureComponent {
       this.queryListData();
     });
   }
-  componentDidMount() {
-    this.queryListData();
-  }
   handleShowAddModal() {
     this.setState({
       addModalVisible: true,
@@ -218,7 +217,6 @@ class User extends React.PureComponent {
       updateModalVisible: true,
     });
   }
-
   // 删除记录 接受一个ids数组
   handleDelete(records) {
     const { store } = this.props;
@@ -328,8 +326,10 @@ class User extends React.PureComponent {
       this.handleOffline(selectedRows);
     }
   }
-  // 新增
-  addModalHandleOk() {}
+  // 初始化
+  componentDidMount() {
+    this.queryListData();
+  }
   render() {
     const { store } = this.props;
     // store.User.userList && console.log(store.User.userList.list);
@@ -627,6 +627,8 @@ class User extends React.PureComponent {
                   style={{ display: displaySearchForm ? "block" : "none" }}
                 >
                   <Form
+                    // form={searchForm}
+                    ref={this.searchFormRef}
                     layout="inline"
                     onValuesChange={(values) => {
                       console.log(values);

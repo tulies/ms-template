@@ -6,12 +6,11 @@ import {
   MehOutlined,
 } from "@ant-design/icons";
 import BasicLayout from "@/layouts/BasicLayout";
-import BlankLayout from "@/layouts/BlankLayout";
 import UserLayout from "@/layouts/UserLayout";
 
 // import Main from "../pages/Main";
-import About from "@/pages/About";
-import List from "@/pages/List";
+// import About from "@/pages/About";
+// import List from "@/pages/List";
 // import More from "../pages/More";
 import UserLogin from "@/pages/User/Login";
 
@@ -22,7 +21,7 @@ const routes = [
   {
     path: "/user",
     component: UserLayout,
-    routes: [
+    children: [
       {
         name: "login",
         path: "/user/login",
@@ -39,13 +38,13 @@ const routes = [
     name: "首页",
     component: BasicLayout,
     // exact: true,
-    routes: [
+    children: [
       {
         name: "平台管理",
         path: "/sys",
-        component: BlankLayout,
+        // component: BlankLayout,
         icon: MehOutlined,
-        routes: [
+        children: [
           {
             name: "平台用户管理",
             path: "/sys/user",
@@ -56,9 +55,9 @@ const routes = [
       {
         name: "运营编辑",
         path: "/list",
-        component: List,
+        // component: List,
         icon: HomeOutlined,
-        routes: [
+        children: [
           {
             name: "首页推荐",
             path: "/list/a",
@@ -79,9 +78,9 @@ const routes = [
       {
         name: "服务信息",
         path: "/test",
-        component: BlankLayout,
+        // component: BlankLayout,
         icon: ShopOutlined,
-        routes: [
+        children: [
           {
             name: "服务信息",
             path: "/test/a",
@@ -92,9 +91,9 @@ const routes = [
       {
         name: "订单管理",
         path: "/about",
-        component: About,
+        // component: About,
         icon: TransactionOutlined,
-        routes: [
+        children: [
           {
             name: "订单列表",
             path: "/about/a",

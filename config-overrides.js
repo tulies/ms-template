@@ -36,7 +36,7 @@ module.exports = override(
   // add an alias for "ag-grid-react" imports
   addWebpackAlias({
     // ["ag-grid-react$"]: path.resolve(__dirname, "src/shared/agGridWrapper.js"),
-    ["@"]: path.resolve(__dirname, "src"),
+    "@": path.resolve(__dirname, "src"),
   })
 
   // adjust the underlying workbox

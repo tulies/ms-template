@@ -3,7 +3,8 @@ import pathToRegexp from "path-to-regexp";
 import { Breadcrumb } from "antd";
 import styles from "./index.module.less";
 import { urlToList } from "../_utils/pathTools";
-import { HomeOutlined, UserOutlined } from "@ant-design/icons";
+// import { HomeOutlined, UserOutlined } from "@ant-design/icons";
+import routes from "@/router/routes";
 
 export const getBreadcrumb = (breadcrumbNameMap, url) => {
   let breadcrumb = breadcrumbNameMap[url];
@@ -21,9 +22,28 @@ export default class BreadcrumbView extends PureComponent {
   state = {
     breadcrumb: null,
   };
-
+  /**
+   * 获取面包屑映射
+   * @param {Object} menuData 菜单配置
+   */
+  getBreadcrumbNameMap() {
+    const routerMap = {};
+    const mergeMenuAndRouter = (data) => {
+      data.forEach((menuItem) => {
+        if (menuItem.children) {
+          mergeMenuAndRouter(menuItem.children);
+        }
+        // Reduce memory usage
+        routerMap[menuItem.path] = menuItem;
+      });
+    };
+    mergeMenuAndRouter(routes[1].children);
+    return routerMap;
+  }
   componentDidMount() {
-    // this.getBreadcrumbDom();
+    // const routerMap = this.getBreadcrumbNameMap();
+    // console.log(routerMap);
+    this.getBreadcrumbDom();
   }
 
   componentDidUpdate(preProps) {
@@ -95,7 +115,10 @@ export default class BreadcrumbView extends PureComponent {
     const pathSnippets = urlToList(routerLocation.pathname);
     // Loop data mosaic routing
     const extraBreadcrumbItems = pathSnippets.map((url, index) => {
+      console.log("--------", url, index);
       const currentBreadcrumb = getBreadcrumb(breadcrumbNameMap, url);
+      console.log("--------", currentBreadcrumb);
+
       if (currentBreadcrumb.inherited) {
         return null;
       }
@@ -126,6 +149,7 @@ export default class BreadcrumbView extends PureComponent {
         )}
       </Breadcrumb.Item>
     );
+    console.log("extraBreadcrumbItems-----", extraBreadcrumbItems);
     return (
       <Breadcrumb className={styles.breadcrumb} separator={breadcrumbSeparator}>
         {extraBreadcrumbItems}
@@ -139,6 +163,7 @@ export default class BreadcrumbView extends PureComponent {
    */
   conversionBreadcrumbList = () => {
     const { breadcrumbList, breadcrumbSeparator } = this.props;
+    console.log({ breadcrumbList, breadcrumbSeparator });
     const {
       routes,
       params,
@@ -148,6 +173,7 @@ export default class BreadcrumbView extends PureComponent {
     if (breadcrumbList && breadcrumbList.length) {
       return this.conversionFromProps();
     }
+
     // 如果传入 routes 和 params 属性
     // If pass routes and params attributes
     if (routes && params) {
@@ -161,10 +187,16 @@ export default class BreadcrumbView extends PureComponent {
         />
       );
     }
+    console.log({ routes, params, routerLocation, breadcrumbNameMap });
+
+    // return null;
     // 根据 location 生成 面包屑
     // Generate breadcrumbs based on location
     if (routerLocation && routerLocation.pathname) {
-      return this.conversionFromLocation(routerLocation, breadcrumbNameMap);
+      return this.conversionFromLocation(
+        routerLocation,
+        this.getBreadcrumbNameMap()
+      );
     }
     return null;
   };
@@ -189,20 +221,20 @@ export default class BreadcrumbView extends PureComponent {
   };
 
   render() {
-    // const { breadcrumb } = this.state;
-    // return breadcrumb;
+    const { breadcrumb } = this.state;
+    return breadcrumb;
 
-    return (
-      <Breadcrumb>
-        <Breadcrumb.Item href="">
-          <HomeOutlined />
-        </Breadcrumb.Item>
-        <Breadcrumb.Item href="">
-          <UserOutlined />
-          <span>Application List</span>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>Application</Breadcrumb.Item>
-      </Breadcrumb>
-    );
+    // return (
+    //   <Breadcrumb>
+    //     <Breadcrumb.Item href="">
+    //       <HomeOutlined />
+    //     </Breadcrumb.Item>
+    //     <Breadcrumb.Item href="">
+    //       <UserOutlined />
+    //       <span>Application List</span>
+    //     </Breadcrumb.Item>
+    //     <Breadcrumb.Item>Application</Breadcrumb.Item>
+    //   </Breadcrumb>
+    // );
   }
 }

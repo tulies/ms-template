@@ -34,9 +34,9 @@ export default class SiderMenu extends React.PureComponent {
   getSubMenuOrItem = (item) => {
     // doc: add hideChildrenInMenu
     if (
-      item.routes &&
+      item.children &&
       !item.hideChildrenInMenu &&
-      item.routes.some((child) => child.name)
+      item.children.some((child) => child.name)
     ) {
       const { name } = item;
       return (
@@ -53,7 +53,7 @@ export default class SiderMenu extends React.PureComponent {
           }
           key={item.path}
         >
-          {this.getNavMenuItems(item.routes)}
+          {this.getNavMenuItems(item.children)}
         </SubMenu>
       );
     }
@@ -107,7 +107,7 @@ export default class SiderMenu extends React.PureComponent {
 
   render() {
     const { collapsed, location } = this.props;
-    // const xxx = this.getNavMenuItems(routes[0].routes);
+    // const xxx = this.getNavMenuItems(routes[0].children);
     // console.log("xxx", routes, xxx);
     return (
       <Sider
@@ -130,7 +130,7 @@ export default class SiderMenu extends React.PureComponent {
             location.pathname.split("/").slice(0, -1).join("/"),
           ]}
         >
-          {this.getNavMenuItems(routes[1].routes)}
+          {this.getNavMenuItems(routes[1].children)}
         </Menu>
       </Sider>
     );
