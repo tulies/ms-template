@@ -1,30 +1,20 @@
 import React from "react";
 import PageWrapper from "@/components/PageWrapper";
-import { Tabs, Layout } from "antd";
+import { Layout } from "antd";
 
-import {
-  // FolderOutlined,
-  // FolderOpenOutlined,
-  // DownOutlined,
-  // ProfileOutlined,
-  FormOutlined,
-  CodeOutlined,
-  // EyeOutlined,
-  PlayCircleOutlined,
-} from "@ant-design/icons";
 import PageHeader from "@/components/PageHeader";
 
 import TreeSlider from "./TreeSlider";
-import DataEdit from "./DataEdit";
-import DataPreview from "./DataPreview";
-import DataSchema from "./DataSchema";
+import DataLeaf from "./DataLeaf";
+import DataNode from "./DataNode";
 import styles from "./index.module.less";
+import { useState } from "react";
 
-const { TabPane } = Tabs;
 const { Sider, Content } = Layout;
 
 // monaco-editor 如何使用 ：https://zhuanlan.zhihu.com/p/47746336
 export default (props) => {
+  const [leaf, setLeaf] = useState(true);
   return (
     <PageWrapper>
       <PageHeader
@@ -37,47 +27,7 @@ export default (props) => {
           <TreeSlider />
         </Sider>
         <Content style={{ height: "100%" }}>
-          <Tabs
-            defaultActiveKey="1"
-            type="card"
-            size="small"
-            style={{ height: "100%" }}
-          >
-            <TabPane
-              tab={
-                <span>
-                  <FormOutlined />
-                  数据编辑
-                </span>
-              }
-              key="1"
-              style={{ height: "100%" }}
-            >
-              <DataEdit />
-            </TabPane>
-            <TabPane
-              tab={
-                <span>
-                  <PlayCircleOutlined />
-                  数据预览
-                </span>
-              }
-              key="3"
-            >
-              <DataPreview />
-            </TabPane>
-            <TabPane
-              tab={
-                <span>
-                  <CodeOutlined />
-                  数据模板
-                </span>
-              }
-              key="2"
-            >
-              <DataSchema />
-            </TabPane>
-          </Tabs>
+          {leaf ? <DataLeaf /> : <DataNode />}
         </Content>
       </Layout>
     </PageWrapper>
