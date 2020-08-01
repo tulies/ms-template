@@ -7,7 +7,13 @@
         border-right: 1px solid #efefef;
         height: 100%;
         background-color: #fff;
+        overflow: scroll;
 
+        :global {
+            .ant-tree-node-content-wrapper {
+                white-space: nowrap;
+            }
+        }
     }
 
     .codeEditor {

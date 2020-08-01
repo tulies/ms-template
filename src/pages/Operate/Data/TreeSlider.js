@@ -1,30 +1,75 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Tree } from "antd";
-import { DownOutlined } from "@ant-design/icons";
-const { TreeNode } = Tree;
+import { useStore } from "@/store/uses";
+// const initTreeDate = [
+//   {
+//     title: "Expand to load",
+//     key: "0",
+//   },
+//   {
+//     title: "Expand to load",
+//     key: "1",
+//   },
+//   {
+//     title: "Tree Node",
+//     key: "2",
+//     isLeaf: true,
+//   },
+// ]; // It's just a simple demo. You can use tree map to optimize update perf.
+
+const updateTreeData = (list, key, children) => {
+  return list.map((node) => {
+    if (node.key === key) {
+      return { ...node, children };
+    }
+    if (node.children) {
+      return {
+        ...node,
+        children: updateTreeData(node.children, key, children),
+      };
+    }
+
+    return node;
+  });
+};
+
 export default () => {
-  return (
-    <Tree
-      showIcon={true}
-      showLine
-      switcherIcon={<DownOutlined />}
-      defaultExpandedKeys={["0-0-0"]}
-      onSelect={() => {}}
-    >
-      <TreeNode title="parent 1" key="0-0">
-        <TreeNode title="parent 1-0" key="0-0-0" isLeaf={false}>
-          <TreeNode title="leaf" key="0-0-0-0" />
-          <TreeNode title="leaf" key="0-0-0-1" />
-          <TreeNode title="leaf" key="0-0-0-2" />
-        </TreeNode>
-        <TreeNode title="parent 1-1" key="0-0-1" isLeaf={false}>
-          <TreeNode title="leaf" key="0-0-1-0" />
-        </TreeNode>
-        <TreeNode title="parent 1-2" key="0-0-2" isLeaf={false}>
-          <TreeNode title="leaf" key="0-0-2-0" />
-          <TreeNode title="leaf" key="0-0-2-1" />
-        </TreeNode>
-      </TreeNode>
-    </Tree>
-  );
+  const localStore = useStore();
+  const [treeData, setTreeData] = useState([]);
+
+  useEffect(() => {
+    localStore.Operate.queryOperateNodeList().then((res) => {
+      console.log(res);
+      if (res.code === 0) {
+        setTreeData(res.data.list);
+      }
+    });
+  }, []);
+
+  function onLoadData({ key, children }) {
+    return new Promise((resolve) => {
+      if (children) {
+        resolve();
+        return;
+      }
+
+      setTimeout(() => {
+        setTreeData((origin) =>
+          updateTreeData(origin, key, [
+            {
+              title: "Child Node",
+              key: `${key}-0`,
+            },
+            {
+              title: "Child Node",
+              key: `${key}-1`,
+            },
+          ])
+        );
+        resolve();
+      }, 1000);
+    });
+  }
+
+  return <Tree showLine loadData={onLoadData} treeData={treeData} />;
 };

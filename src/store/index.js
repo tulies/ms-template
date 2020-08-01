@@ -1,9 +1,9 @@
 // 汇总store
-import test from "./modules/test";
 import User from "./modules/User";
+import Operate from "./modules/Operate";
 
 const store = {
-  test,
   User,
+  Operate,
 };
 export default store;

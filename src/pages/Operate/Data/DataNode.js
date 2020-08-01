@@ -8,14 +8,14 @@ import {
   Pagination,
   Button,
   Card,
-  Divider,
+  // Divider,
 } from "antd";
 import {
   PlusOutlined,
   SendOutlined,
   PoweroffOutlined,
   DeleteRowOutlined,
-  FileSearchOutlined,
+  // FileSearchOutlined,
 } from "@ant-design/icons";
 
 const { Search } = Input;
