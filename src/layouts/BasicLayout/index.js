@@ -58,7 +58,7 @@ class BasicLayout extends React.Component {
   // constructor(props) {
   //   console.log("componentWillMount", props);
   // }
-  componentWillMount() {
+  componentDidMount() {
     // const { history } = this.props;
     // const { userinfo } = store.User;
     const userinfo = getUserInfo();

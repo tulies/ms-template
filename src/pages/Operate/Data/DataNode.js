@@ -94,7 +94,8 @@ export default (props) => {
         <Descriptions size="small" column={3}>
           <Descriptions.Item label="Created">Lili Qu</Descriptions.Item>
           <Descriptions.Item label="Association">
-            <a>421421</a>
+            {/* <a>421421</a> */}
+            421421
           </Descriptions.Item>
           <Descriptions.Item label="Creation Time">
             2017-01-10

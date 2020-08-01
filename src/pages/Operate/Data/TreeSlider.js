@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Tree } from "antd";
 import { useStore } from "@/store/uses";
+const { DirectoryTree } = Tree;
 // const initTreeDate = [
 //   {
 //     title: "Expand to load",
@@ -35,41 +36,75 @@ const updateTreeData = (list, key, children) => {
 
 export default () => {
   const localStore = useStore();
-  const [treeData, setTreeData] = useState([]);
+  // const loadTreeList = () => {
 
-  useEffect(() => {
-    localStore.Operate.queryOperateNodeList().then((res) => {
-      console.log(res);
-      if (res.code === 0) {
-        setTreeData(res.data.list);
-      }
-    });
-  }, []);
-
-  function onLoadData({ key, children }) {
+  // };
+  // 展开节点时候会调用这个
+  const onLoadData = ({ key, children }) => {
+    console.log("onLoadData", { key, children });
     return new Promise((resolve) => {
       if (children) {
         resolve();
         return;
       }
 
-      setTimeout(() => {
-        setTreeData((origin) =>
-          updateTreeData(origin, key, [
-            {
-              title: "Child Node",
-              key: `${key}-0`,
-            },
-            {
-              title: "Child Node",
-              key: `${key}-1`,
-            },
-          ])
-        );
-        resolve();
-      }, 1000);
-    });
-  }
+      localStore.Operate.queryOperateNodeList({ parentNid: key }).then(
+        (res) => {
+          console.log(res);
+          if (res.code === 0) {
+            // setTreeData(res.data.list);
 
-  return <Tree showLine loadData={onLoadData} treeData={treeData} />;
+            setTreeData((origin) => updateTreeData(origin, key, res.data.list));
+          }
+          resolve();
+        }
+      );
+    });
+  };
+
+  const [selectedKey, setSelectedKey] = useState([]);
+  const [treeData, setTreeData] = useState([]);
+  // const [parentNid, setParentId] = useState(0);
+
+  useEffect(() => {
+    localStore.Operate.queryOperateNodeList({ parentNid: 0 }).then((res) => {
+      console.log(res);
+      if (res.code === 0) {
+        setTreeData(res.data.list);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    console.log("切换右侧页面");
+  }, [selectedKey]);
+
+  return (
+    <Tree
+      selectedKeys={[selectedKey]}
+      showLine={true}
+      blockNode={true}
+      loadData={onLoadData}
+      treeData={treeData}
+      onLoad={(loadedKeys, { event, node }) => {
+        console.log("onLoad", loadedKeys, { event, node });
+      }}
+      onRightClick={({ event, node }) => {
+        console.log("onRightClick", event, node);
+      }}
+      onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
+        setSelectedKey(node.key);
+        console.log("onSelect", selectedKeys, {
+          selected,
+          selectedNodes,
+          node,
+          event,
+        });
+      }}
+      onExpand={(expandedKeys, { expanded, node }) => {
+        console.log("onExpand	", expandedKeys, { expanded, node });
+      }}
+    />
+  );
 };

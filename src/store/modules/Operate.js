@@ -1,11 +1,10 @@
-import { observable, action, configure, runInAction } from "mobx";
+import { action, configure } from "mobx";
 import {
   queryOperateNodeList,
   createOperateNode,
   updateOperateNode,
   deleteOperateNode,
 } from "@/services/OperateService";
-import { setUserInfo } from "@/utils/authority";
 
 // 不允许在动作外部修改状态
 configure({ enforceActions: "always" });
@@ -21,8 +20,9 @@ class Operate {
       data.data.list = data.data.list.map((v) => ({
         ...v,
         title: v.name,
-        key: v.id,
+        key: v.nid,
         isLeaf: v.leaf === 1,
+        selectable: v.leaf === 1,
       }));
     }
     return data;

@@ -5,16 +5,16 @@ import { Layout } from "antd";
 import PageHeader from "@/components/PageHeader";
 
 import TreeSlider from "./TreeSlider";
-import DataLeaf from "./DataLeaf";
+// import DataLeaf from "./DataLeaf";
 import DataNode from "./DataNode";
 import styles from "./index.module.less";
-import { useState } from "react";
+// import { useState } from "react";
 
 const { Sider, Content } = Layout;
 
 // monaco-editor 如何使用 ：https://zhuanlan.zhihu.com/p/47746336
 export default (props) => {
-  const [leaf, setLeaf] = useState(true);
+  // const [leaf, setLeaf] = useState(true);
   return (
     <PageWrapper>
       <PageHeader
@@ -27,7 +27,8 @@ export default (props) => {
           <TreeSlider />
         </Sider>
         <Content style={{ height: "100%" }}>
-          {leaf ? <DataLeaf /> : <DataNode />}
+          {/* {leaf ? <DataLeaf /> : <DataNode />} */}
+          <DataNode />
         </Content>
       </Layout>
     </PageWrapper>
