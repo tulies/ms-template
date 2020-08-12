@@ -15,6 +15,7 @@ import {
   SendOutlined,
   PoweroffOutlined,
   DeleteRowOutlined,
+  FormOutlined,
   // FileSearchOutlined,
 } from "@ant-design/icons";
 
@@ -25,13 +26,31 @@ export default (props) => {
   const dataSource = [
     {
       key: "1",
-      name: "胡彦斌",
+      name: "首页索引",
       age: 32,
       address: "西湖区湖底公园1号",
     },
     {
       key: "2",
-      name: "胡彦祖",
+      name: "KV区块",
+      age: 42,
+      address: "西湖区湖底公园1号",
+    },
+    {
+      key: "2",
+      name: "电影",
+      age: 42,
+      address: "西湖区湖底公园1号",
+    },
+    {
+      key: "2",
+      name: "电视剧",
+      age: 42,
+      address: "西湖区湖底公园1号",
+    },
+    {
+      key: "2",
+      name: "综艺",
       age: 42,
       address: "西湖区湖底公园1号",
     },
@@ -81,13 +100,14 @@ export default (props) => {
       <PageHeader
         ghost={false}
         // onBack={() => window.history.back()}
-        title="Title"
-        subTitle="This is a subtitle"
+        title="门户首页"
+        subTitle="这是门户首页，2020-08-20年改版！"
         extra={[
-          <Button key="3">Operation</Button>,
-          <Button key="2">Operation</Button>,
-          <Button key="1" type="primary">
-            Primary
+          <Button key="2" icon={<FormOutlined />}>
+            修改
+          </Button>,
+          <Button key="1" icon={<PlusOutlined />} type="primary">
+            子页面
           </Button>,
         ]}
       >
@@ -122,7 +142,7 @@ export default (props) => {
                   // this.handleShowAddModal();
                 }}
               >
-                数据区块
+                数据碎片
               </Button>
               <Button
                 icon={<SendOutlined />}

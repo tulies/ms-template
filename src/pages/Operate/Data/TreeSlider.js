@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Tree } from "antd";
 import { useStore } from "@/store/uses";
-const { DirectoryTree } = Tree;
+// const { DirectoryTree } = Tree;
 // const initTreeDate = [
 //   {
 //     title: "Expand to load",
