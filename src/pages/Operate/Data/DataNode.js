@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   PageHeader,
   Descriptions,
@@ -22,7 +22,8 @@ import {
 const { Search } = Input;
 const { Option } = Select;
 
-export default (props) => {
+export default memo((props) => {
+  console.log("DataNode----render");
   const dataSource = [
     {
       key: "1",
@@ -37,19 +38,19 @@ export default (props) => {
       address: "西湖区湖底公园1号",
     },
     {
-      key: "2",
+      key: "3",
       name: "电影",
       age: 42,
       address: "西湖区湖底公园1号",
     },
     {
-      key: "2",
+      key: "4",
       name: "电视剧",
       age: 42,
       address: "西湖区湖底公园1号",
     },
     {
-      key: "2",
+      key: "5",
       name: "综艺",
       age: 42,
       address: "西湖区湖底公园1号",
@@ -106,9 +107,9 @@ export default (props) => {
           <Button key="2" icon={<FormOutlined />}>
             修改
           </Button>,
-          <Button key="1" icon={<PlusOutlined />} type="primary">
-            子页面
-          </Button>,
+          // <Button key="1" icon={<PlusOutlined />} type="primary">
+          //   子页面
+          // </Button>,
         ]}
       >
         <Descriptions size="small" column={3}>
@@ -237,4 +238,4 @@ export default (props) => {
       </Card>
     </div>
   );
-};
+});

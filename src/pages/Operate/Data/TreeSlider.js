@@ -1,22 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Tree } from "antd";
 import { useStore } from "@/store/uses";
-// const { DirectoryTree } = Tree;
-// const initTreeDate = [
-//   {
-//     title: "Expand to load",
-//     key: "0",
-//   },
-//   {
-//     title: "Expand to load",
-//     key: "1",
-//   },
-//   {
-//     title: "Tree Node",
-//     key: "2",
-//     isLeaf: true,
-//   },
-// ]; // It's just a simple demo. You can use tree map to optimize update perf.
 
 const updateTreeData = (list, key, children) => {
   return list.map((node) => {
@@ -34,7 +18,8 @@ const updateTreeData = (list, key, children) => {
   });
 };
 
-export default () => {
+export default (props) => {
+  const { onSelect, onRightClick } = props;
   const localStore = useStore();
   // const loadTreeList = () => {
 
@@ -76,10 +61,10 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    console.log("切换右侧页面");
-  }, [selectedKey]);
-
+  // useEffect(() => {
+  //   console.log("切换右侧页面");
+  // }, [selectedKey]);
+  // console.log("重复渲染下吗");
   return (
     <Tree
       selectedKeys={[selectedKey]}
@@ -91,16 +76,13 @@ export default () => {
         console.log("onLoad", loadedKeys, { event, node });
       }}
       onRightClick={({ event, node }) => {
-        console.log("onRightClick", event, node);
+        // console.log("onRightClick", event);
+        onRightClick({ event, node });
       }}
       onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
         setSelectedKey(node.key);
-        console.log("onSelect", selectedKeys, {
-          selected,
-          selectedNodes,
-          node,
-          event,
-        });
+        // 把当前点击的节点回调回去
+        onSelect({ node });
       }}
       onExpand={(expandedKeys, { expanded, node }) => {
         console.log("onExpand	", expandedKeys, { expanded, node });
