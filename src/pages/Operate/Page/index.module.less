@@ -1,0 +1,85 @@
+@import '~antd/lib/style/themes/default.less';
+
+.playground {
+    height: 100vh;
+    background-color: #fff;
+
+    .treeSlider {
+        position: relative;
+        padding: 10px 5px 0 10px;
+        border-right: 1px solid #efefef;
+        height: 100%;
+        background-color: #fff;
+        overflow: auto;
+
+        :global {
+            .ant-tree-node-content-wrapper {
+                white-space: nowrap;
+                user-select: none;
+            }
+        }
+    }
+
+    .codeEditor {
+        height: 100%;
+    }
+
+    :global {
+        .ant-tabs-content {
+            height: 100%;
+        }
+    }
+
+}
+
+.rightClickMenu {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, .65);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    -webkit-font-feature-settings: "tnum";
+    font-feature-settings: "tnum";
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    z-index: 1050;
+    display: block;
+    min-width: 80px;
+    user-select: none;
+
+    >ul {
+        position: relative;
+        margin: 0;
+        padding: 4px 0;
+        text-align: left;
+        list-style-type: none;
+        background-color: #fff;
+        background-clip: padding-box;
+        border-radius: 2px;
+        outline: none;
+        -webkit-box-shadow: 0 3px 6px -4px rgba(0, 0, 0, .12), 0 6px 16px 0 rgba(0, 0, 0, .08), 0 9px 28px 8px rgba(0, 0, 0, .05);
+        box-shadow: 0 3px 6px -4px rgba(0, 0, 0, .12), 0 6px 16px 0 rgba(0, 0, 0, .08), 0 9px 28px 8px rgba(0, 0, 0, .05);
+
+        >li {
+            clear: both;
+            margin: 0;
+            padding: 5px 12px;
+            color: rgba(0, 0, 0, .65);
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 22px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all .3s;
+
+            &:hover {
+                background-color: #efefef;
+                color: @primary-color;
+            }
+        }
+    }
+}

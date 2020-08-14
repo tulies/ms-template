@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Tree } from "antd";
 import { useStore } from "@/store/uses";
+// import styles from "./index.module.less";
 
 const updateTreeData = (list, key, children) => {
   return list.map((node) => {
@@ -21,9 +22,6 @@ const updateTreeData = (list, key, children) => {
 export default (props) => {
   const { onSelect, onRightClick } = props;
   const localStore = useStore();
-  // const loadTreeList = () => {
-
-  // };
   // 展开节点时候会调用这个
   const onLoadData = ({ key, children }) => {
     console.log("onLoadData", { key, children });
@@ -61,32 +59,36 @@ export default (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   console.log("切换右侧页面");
-  // }, [selectedKey]);
-  // console.log("重复渲染下吗");
   return (
-    <Tree
-      selectedKeys={[selectedKey]}
-      showLine={true}
-      blockNode={true}
-      loadData={onLoadData}
-      treeData={treeData}
-      onLoad={(loadedKeys, { event, node }) => {
-        console.log("onLoad", loadedKeys, { event, node });
-      }}
-      onRightClick={({ event, node }) => {
-        // console.log("onRightClick", event);
-        onRightClick({ event, node });
-      }}
-      onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
-        setSelectedKey(node.key);
-        // 把当前点击的节点回调回去
-        onSelect({ node });
-      }}
-      onExpand={(expandedKeys, { expanded, node }) => {
-        console.log("onExpand	", expandedKeys, { expanded, node });
-      }}
-    />
+    <React.Fragment>
+      <Tree
+        className="tree"
+        selectedKeys={[selectedKey]}
+        showLine={true}
+        blockNode={true}
+        loadData={onLoadData}
+        treeData={treeData}
+        onLoad={(loadedKeys, { event, node }) => {
+          console.log("onLoad", loadedKeys, { event, node });
+        }}
+        onRightClick={({ event, node }) => {
+          // console.log("onRightClick", event);
+          onRightClick({ event, node });
+          // setRightClickNodeTreeItem({
+          //   pageX: event.pageX,
+          //   pageY: event.pageY,
+          //   node,
+          // });
+        }}
+        onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
+          setSelectedKey(node.key);
+          // 把当前点击的节点回调回去
+          onSelect({ node });
+        }}
+        onExpand={(expandedKeys, { expanded, node }) => {
+          console.log("onExpand	", expandedKeys, { expanded, node });
+        }}
+      />
+    </React.Fragment>
   );
 };

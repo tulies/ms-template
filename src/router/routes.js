@@ -8,7 +8,8 @@ import {
 import BasicLayout from "@/layouts/BasicLayout";
 import UserLayout from "@/layouts/UserLayout";
 
-import OperateData from "@/pages/Operate/Data";
+import OperatePage from "@/pages/Operate/Page";
+import OperateTpl from "@/pages/Operate/Tpl";
 import UserLogin from "@/pages/User/Login";
 
 // 平台管理 - 平台用户管理
@@ -43,9 +44,14 @@ const routes = [
         icon: HomeOutlined,
         children: [
           {
-            name: "区块推荐",
-            path: "/operate/data",
-            component: OperateData,
+            name: "页面维护",
+            path: "/operate/page",
+            component: OperatePage,
+          },
+          {
+            name: "模板维护",
+            path: "/operate/tpl",
+            component: OperateTpl,
           },
         ],
       },

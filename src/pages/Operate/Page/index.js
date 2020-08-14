@@ -9,6 +9,7 @@ import TreeSlider from "./TreeSlider";
 // import DataNode from "./DataNode";
 import styles from "./index.module.less";
 import DataLeaf from "./DataLeaf";
+import RightMenu from "./views/RightMenu";
 // import { useState } from "react";
 
 const { Sider, Content } = Layout;
@@ -22,30 +23,15 @@ const { Sider, Content } = Layout;
 // monaco-editor 如何使用 ：https://zhuanlan.zhihu.com/p/47746336
 export default (props) => {
   const [selectedNode, setSelectedNode] = useState(null);
-  const [rightClickNodeTreeItem, setRightClickNodeTreeItem] = useState(null);
+  const [rightClickNodeProps, setRightClickNodeProps] = useState(null);
   useEffect(() => {
     console.log("切换右侧页面");
+    // return () => {
+    //   alert("哈哈哈哈");
+    // };
   }, [selectedNode]);
 
-  const getNodeTreeRightClickMenu = (params) => {
-    const { pageX, pageY, node } = params;
-    const tmpStyle = {
-      position: "absolute",
-      left: `${pageX}px`,
-      top: `${pageY}px`,
-      zIndex: 1000,
-    };
-    const menu = (
-      <div style={tmpStyle}>
-        <Menu>
-          <Menu.Item key="1">1st menu item</Menu.Item>
-          <Menu.Item key="2">2nd menu item</Menu.Item>
-          <Menu.Item key="3">3rd menu item</Menu.Item>
-        </Menu>
-      </div>
-    );
-    return menu;
-  };
+  // 渲染右键菜单
 
   return (
     <PageWrapper>
@@ -64,7 +50,7 @@ export default (props) => {
               }
             }}
             onRightClick={({ event, node }) => {
-              setRightClickNodeTreeItem({
+              setRightClickNodeProps({
                 pageX: event.pageX,
                 pageY: event.pageY,
                 node,
@@ -76,9 +62,19 @@ export default (props) => {
           {/* {leaf ? <DataLeaf /> : <DataNode />} */}
           {selectedNode ? <DataLeaf node={selectedNode} /> : "请选中页面区块"}
         </Content>
-        {rightClickNodeTreeItem !== null
-          ? getNodeTreeRightClickMenu(rightClickNodeTreeItem)
-          : null}
+        {/* 这里渲染右键菜单 */}
+        {rightClickNodeProps !== null ? (
+          <RightMenu
+            rightClickNodeProps={rightClickNodeProps}
+            onMouseLeave={() => {
+              setRightClickNodeProps(null);
+            }}
+            onClick={({ event, node }) => {
+              setRightClickNodeProps(null);
+              console.log("触发菜单cick", event, node);
+            }}
+          />
+        ) : null}
       </Layout>
     </PageWrapper>
   );
