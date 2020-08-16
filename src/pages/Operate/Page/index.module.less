@@ -1,7 +1,9 @@
 @import '~antd/lib/style/themes/default.less';
 
 .playground {
+
     height: 100vh;
+
     background-color: #fff;
 
     .treeSlider {
@@ -16,6 +18,18 @@
             .ant-tree-node-content-wrapper {
                 white-space: nowrap;
                 user-select: none;
+            }
+
+            // .ant-tree-treenode-selected {
+            //     .ant-tree-node-selected {
+            //         background-color: #1890ff;
+
+            //     }
+            // }
+
+            .ant-tree.ant-tree-directory .ant-tree-treenode .ant-tree-node-content-wrapper.ant-tree-node-selected {
+                background-color: #1890ff;
+
             }
         }
     }

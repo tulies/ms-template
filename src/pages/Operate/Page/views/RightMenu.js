@@ -7,8 +7,8 @@ export default (props) => {
   const { pageX, pageY, node } = rightClickNodeProps;
   const tmpStyle = {
     position: "absolute",
-    left: `${pageX - 2}px`,
-    top: `${pageY - 2}px`,
+    left: `${pageX - 3}px`,
+    top: `${pageY - 3}px`,
     zIndex: 1000,
   };
   const menu = (
@@ -52,6 +52,13 @@ export default (props) => {
           }}
         >
           删除
+        </li>
+        <li
+          onClick={() => {
+            if (onClick) onClick({ event: "refresh", node: node });
+          }}
+        >
+          刷新
         </li>
       </ul>
     </div>
