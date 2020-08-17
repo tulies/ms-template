@@ -24,9 +24,10 @@ export default function (props) {
     localStore.Operate.updateOperateNode({
       payload: { ...values },
     }).then((res) => {
+      console.log("update", res);
       if (res.code === 0) {
         message.success({ content: "处理成功！", key, duration: 2 });
-        handleOk(values);
+        handleOk(res.data);
       } else {
         message.error({
           content: res.msg || "系统出错了，请稍后再试",

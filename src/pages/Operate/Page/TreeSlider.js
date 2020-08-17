@@ -23,6 +23,22 @@ const updateTreeData = (list, key, children) => {
     return node;
   });
 };
+const updateTreeNode = (list, key, newNode) => {
+  return list.map((node) => {
+    if (node.key === key) {
+      newNode = { ...node, ...newNode, title: newNode.name, children: null };
+      // delete renode.children;
+      return newNode;
+    }
+    if (node.children) {
+      return {
+        ...node,
+        children: updateTreeNode(node.children, key, newNode),
+      };
+    }
+    return node;
+  });
+};
 
 export default (props) => {
   const { onSelect, cRef } = props;
@@ -85,6 +101,13 @@ export default (props) => {
       }
     });
   };
+  const editRefreshData = ({ node }) => {
+    setLoadedKeys((origin) => origin.filter((v) => ![node.nid].includes(v)));
+    setExpandedKeys((origin) => origin.filter((v) => ![node.nid].includes(v)));
+    setTreeData((origin) => {
+      return updateTreeNode(origin, node.nid, node);
+    });
+  };
   const [selectedKey, setSelectedKey] = useState([]);
   const [loadedKeys, setLoadedKeys] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState([]);
@@ -110,11 +133,10 @@ export default (props) => {
   }, []);
   useImperativeHandle(cRef, () => ({
     // changeVal 就是暴露给父组件的方法
-    // showAddNodePage: ({ parentNid }) => {
-    //   setNewLeaf(0);
-    //   setParentNid(node.nid);
-    //   setShowAddNodePage(true);
-    // },
+    showEditNodePage: ({ node }) => {
+      setCurOperateNode(node);
+      setShowAddNodePage(true);
+    },
   }));
 
   const onRightClick = ({ event, node }) => {
@@ -172,20 +194,16 @@ export default (props) => {
             setRightClickNodeProps(null);
             console.log("触发菜单cick", event, node);
             if (event === "refresh") {
-              console.log("refresh");
               refreshData({ node });
             } else if (event === "newPage") {
-              console.log("newPage");
               setNewLeaf(1);
               setCurOperateNode(node);
               setShowAddNodePage(true);
             } else if (event === "newNode") {
-              console.log("newNode");
               setNewLeaf(0);
               setCurOperateNode(node);
               setShowAddNodePage(true);
             } else if (event === "edit") {
-              console.log("edit node");
               setCurOperateNode(node);
               setShowEditNodePage(true);
             }
@@ -212,10 +230,12 @@ export default (props) => {
         <EditNodePage
           visible={showEditNodePage}
           node={curOperateNode}
-          handleOk={(res) => {
+          handleOk={(node) => {
             setShowEditNodePage(false);
-            refreshData({ node: { nid: curOperateNode.parentNid } });
+            // refreshData({ node: { nid: curOperateNode.parentNid } });
 
+            // setTreeData(updateTreeNode(treeData, node.nid, node));
+            editRefreshData({ node });
             // refreshData({ node: curOperateNode });
           }}
           handleClose={() => {

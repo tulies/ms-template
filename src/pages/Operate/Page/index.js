@@ -41,6 +41,10 @@ export default (props) => {
               setSelectedNode(node);
             }
           }}
+          onSelectUpdate={({ node }) => {
+            console.log(node);
+            setSelectedNode(node);
+          }}
         />
 
         <Content style={{ height: "100%" }}>
