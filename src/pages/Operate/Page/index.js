@@ -8,6 +8,7 @@ import TreeSlider from "./TreeSlider";
 
 import styles from "./index.module.less";
 import DataLeaf from "./DataLeaf";
+import SelectTpl from "./views/SelectTpl";
 
 const { Content } = Layout;
 
@@ -46,7 +47,7 @@ export default (props) => {
             setSelectedNode(node);
           }}
         />
-
+        <SelectTpl />
         <Content style={{ height: "100%" }}>
           {selectedNode ? <DataLeaf node={selectedNode} /> : "请选中页面区块"}
         </Content>
